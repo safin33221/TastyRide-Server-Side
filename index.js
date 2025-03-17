@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const cors = require('cors')
+const  connectDB  = require('./utils/db')
 const app = express()
 const prot = process.env.PORT || 8080
 
@@ -12,10 +13,10 @@ app.use(express.json())
 
 
 //Mongoose
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('mogoose conntected succefully'))
-    .catch((err) => console.log(err))
+connectDB()
+// mongoose.connect(process.env.MONGO_URI)
+//     .then(() => console.log('mogoose conntected succefully'))
+//     .catch((err) => console.log(err))
 
 
 app.get('/', async (req, res) => {
