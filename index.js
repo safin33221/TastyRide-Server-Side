@@ -2,9 +2,11 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const cors = require('cors')
-const  connectDB  = require('./utils/db')
+const connectDB = require('./utils/db')
 const app = express()
-const prot = process.env.PORT || 8080
+const prot = process.env.PORT || 8000
+
+const authRoutes = require('./routes/authRoutes')
 
 //Middle Ware
 app.use(cors())
@@ -14,6 +16,7 @@ app.use(express.json())
 
 //Mongoose
 connectDB()
+app.use('/', authRoutes)
 // mongoose.connect(process.env.MONGO_URI)
 //     .then(() => console.log('mogoose conntected succefully'))
 //     .catch((err) => console.log(err))
