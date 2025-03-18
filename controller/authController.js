@@ -41,7 +41,7 @@ const getUser = async (req, res) => {
       return res.status(404).send({ message: "User not found" });
     }
 
-    res.json({ user });
+    res.json(user );
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
