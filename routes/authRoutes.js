@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { registerUser, getUsers } = require('../controller/authController')
+const { registerUser, getUsers, getUserRole } = require('../controller/authController')
 const router = express.Router()
 
 
@@ -9,5 +9,8 @@ router.get('/users',getUsers)
 
 //Post New User
 router.post('/register', registerUser)
+
+//get user role by email
+router.get('/role/:email',getUserRole)
 
 module.exports = router
