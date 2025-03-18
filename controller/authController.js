@@ -32,19 +32,19 @@ const getUsers = async (req, res) => {
 };
 
 // get user role by email
-const getUserRole = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const user = await User.findOne({email}).select("role");
+    const user = await User.findOne({email});
 
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    res.json({ role: user.role });
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
-module.exports = { registerUser, getUsers, getUserRole };
+module.exports = { registerUser, getUsers, getUser };
