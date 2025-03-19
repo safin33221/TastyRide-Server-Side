@@ -7,6 +7,7 @@ const app = express()
 const prot = process.env.PORT || 8000
 
 const authRoutes = require('./routes/authRoutes')
+const foodRoutes = require('./routes/foodRoutes')
 
 //Middle Ware
 app.use(cors())
@@ -16,7 +17,8 @@ app.use(express.json())
 
 //Mongoose
 connectDB()
-app.use('/', authRoutes)
+app.use('/auth', authRoutes)
+app.use('/api', foodRoutes)
 // mongoose.connect(process.env.MONGO_URI)
 //     .then(() => console.log('mogoose conntected succefully'))
 //     .catch((err) => console.log(err))
