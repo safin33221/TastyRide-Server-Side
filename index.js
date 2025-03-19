@@ -17,8 +17,8 @@ app.use(express.json())
 
 //Mongoose
 connectDB()
-app.use('/', authRoutes)
-app.use('/', foodRoutes)
+app.use('/auth', authRoutes)
+app.use('/api', foodRoutes)
 // mongoose.connect(process.env.MONGO_URI)
 //     .then(() => console.log('mogoose conntected succefully'))
 //     .catch((err) => console.log(err))
