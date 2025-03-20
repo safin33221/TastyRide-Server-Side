@@ -27,4 +27,4 @@ app.get('/', async (req, res) => {
 
 
 
-app.listen(port, () => { console.log(`TastyRide Run on ${prot}`) })
+app.listen(port, () => { console.log(`TastyRide Run on ${port}`) })
