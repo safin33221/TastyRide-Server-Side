@@ -1,7 +1,7 @@
 const User = require("../model/authModel");
 
 const registerUser = async (req, res) => {
-  const { username, email, photo } = req.body;
+  const { username, email, photo, role } = req.body;
   try {
     //Check Existing User
     const existingUser = await User.findOne({ email });
@@ -14,6 +14,7 @@ const registerUser = async (req, res) => {
       username,
       photo,
       email,
+      role
     });
     await nweUser.save();
     res.status(201).send({ message: "User Registered Successfully" });
@@ -38,13 +39,13 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    res.json(user );
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
