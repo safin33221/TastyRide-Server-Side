@@ -1,8 +1,10 @@
+const Food = require('./../model/foodModel');
+
 const addFood = async (req, res) => {
   const { foodName, foodImg, price, review } = req.body;
   try {
     //Save New food in DB
-    const newFood = new User({
+    const newFood = new Food({
       foodName,
       foodImg,
       price,
@@ -16,4 +18,13 @@ const addFood = async (req, res) => {
 };
 
 
-module.exports = {addFood}
+const getAllFood = async (req, res) => {
+  try {
+    const foods = await Food.find()
+    res.status(201).send({ message: "Food Fetched Successfully", data: foods });
+  } catch (error) {
+    res.status(500).send({ message: "Server Error" });
+  }
+}
+
+module.exports = {addFood, getAllFood}
