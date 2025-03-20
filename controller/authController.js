@@ -22,14 +22,17 @@ const registerUser = async (req, res) => {
   }
 };
 
+
+
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).send(users);
+    const users = await User.find({});
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).send({ message: "server error" });
+    res.status(500).json({ message: "Failed to fetch users", error: error.message });
   }
 };
+
 
 // get user role by email
 const getUser = async (req, res) => {
@@ -47,4 +50,62 @@ const getUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, getUsers, getUser };
+
+
+const updateUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    // Validate role input (optional but recommended)
+    const validRoles = ["admin", "restaurant", "customer"];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    // Update the user and return the updated document
+    const updatedUser = await User.updateOne(
+      { _id: id },
+      { role },
+      { new: true } // Note: `new: true` is for findOneAndUpdate, not updateOne; see alternative below
+    );
+
+    // Since updateOne doesn’t return the document, fetch it afterward if needed
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return success with modifiedCount for frontend to interpret
+    res.status(200).json({
+      message: "User role updated successfully",
+      modifiedCount: updatedUser.modifiedCount,
+      user, // Optionally return the updated user
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+// Delete a user
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = await User.deleteOne({ _id: id });
+
+    if (deletedUser.deletedCount > 0) {
+      res.status(200).json({
+        message: "User deleted successfully",
+        deletedCount: deletedUser.deletedCount,
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+
+module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser };
