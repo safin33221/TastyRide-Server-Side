@@ -30,4 +30,4 @@ const getComments = async (req, res) => {
     }
 }
 
-module.exports = { addComment }
+module.exports = { addComment, getComments }
