@@ -1,10 +1,9 @@
 const express = require('express')
-const mongoose = require('mongoose')
 require('dotenv').config()
 const cors = require('cors')
 const connectDB = require('./utils/db')
 const app = express()
-const prot = process.env.PORT || 8000
+const port = process.env.PORT || 8000
 
 const authRoutes = require('./routes/authRoutes')
 const foodRoutes = require('./routes/foodRoutes')
@@ -19,9 +18,7 @@ app.use(express.json())
 connectDB()
 app.use('/auth', authRoutes)
 app.use('/api', foodRoutes)
-// mongoose.connect(process.env.MONGO_URI)
-//     .then(() => console.log('mogoose conntected succefully'))
-//     .catch((err) => console.log(err))
+
 
 
 app.get('/', async (req, res) => {
@@ -30,4 +27,4 @@ app.get('/', async (req, res) => {
 
 
 
-app.listen(prot, () => { console.log(`TastyRide Run on ${prot}`) })
+app.listen(port, () => { console.log(`TastyRide Run on ${prot}`) })

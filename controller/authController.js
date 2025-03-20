@@ -10,12 +10,12 @@ const registerUser = async (req, res) => {
     }
 
     //Save New user in DB
-    const nweUser = new User({
+    const newUser = new User({
       username,
       photo,
       email,
     });
-    await nweUser.save();
+    await newUser.save();
     res.status(201).send({ message: "User Registered Successfully" });
   } catch (error) {
     res.status(500).send({ message: "server Error" });
