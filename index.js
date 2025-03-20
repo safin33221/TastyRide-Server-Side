@@ -18,7 +18,7 @@ app.use(express.json())
 
 //Mongoose
 connectDB()
-app.use('/auth', authRoutes)
+app.use('/api', authRoutes)
 app.use('/api', foodRoutes)
 app.use('/api/comment', commentRoutes)
 // mongoose.connect(process.env.MONGO_URI)
