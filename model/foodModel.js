@@ -17,6 +17,30 @@ const foodSchema = new mongoose.Schema({
     review: {
         type: String,
         require: true
+    },
+    description:{
+        type: String,
+        require: true
+    },
+    category:{
+        type: String,
+        require: true
+    },
+    Iigredients:{
+        type: Array,
+        require: true
+    },
+    availability:{
+        type:Boolean,
+        require:true
+    },
+    email: {
+        type: String,
+        require: true
+    },
+    name: {
+        type: String,
+        require: true
     }
 })
 
