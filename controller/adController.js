@@ -1,13 +1,15 @@
 const Ad = require("../model/adModel");
 
 const addAd = async (req, res) => {
-  const { title, description, img, addedBy } = req.body;
+  const { title, description, image, addedBy } = req.body;
+  console.log(req.body);
   try {
     const newAd = new Ad({
       title,
       description,
-      img,
+      image,
       addedBy,
+      status: "pending"
     });
 
     await newAd.save();

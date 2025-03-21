@@ -10,11 +10,15 @@ const adSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    img: {
+    image: {
         type: String,
         required: true
     },
     addedBy: {
+        type: String,
+        required: true
+    },
+    status: {
         type: String,
         required: true
     }
