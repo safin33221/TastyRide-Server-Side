@@ -1,0 +1,55 @@
+const Ad = require("../model/adModel");
+
+const addAd = async (req, res) => {
+  const { title, description, img, addedBy } = req.body;
+  try {
+    const newAd = new Ad({
+      title,
+      description,
+      img,
+      addedBy,
+    });
+
+    await newAd.save();
+    res
+      .status(201)
+      .send({ success: true, message: "Ad Created Successfully", data: newAd });
+  } catch (error) {
+    console.error("Error in addAd:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
+const getAllAd = async (req, res) => {
+  try {
+    const ads = await Ad.find();
+    res
+      .status(201)
+      .send({ success: true, message: "Ad Fetched Successfully", data: ads });
+  } catch (error) {
+    console.error("Error in get all ads:", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
+const getAdByUser = async (req, res) => {
+    const {email} = req.params
+  try {
+    const ads = await Ad.find({addedBy:email})
+    if(ads.length === 0) return res.status(400).send({success: false, message: "No ads added from this user"})
+    res
+      .status(201)
+      .send({ success: true, message: "Ad Fetched Successfully", data: ads });
+  } catch (error) {
+    console.error("Error in get ads by user", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
+module.exports = { addAd, getAllAd, getAdByUser };

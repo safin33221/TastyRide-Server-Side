@@ -7,6 +7,7 @@ const port = process.env.PORT || 8000
 
 const authRoutes = require('./routes/authRoutes')
 const foodRoutes = require('./routes/foodRoutes')
+const adRoutes = require('./routes/adRoutes')
 
 //Middle Ware
 app.use(cors())
@@ -18,6 +19,7 @@ app.use(express.json())
 connectDB()
 app.use('/api', authRoutes)
 app.use('/api', foodRoutes)
+app.use('/api', adRoutes)
 
 
 
