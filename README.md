@@ -7,9 +7,9 @@ TastyRide is a multi-vendor food delivery platform connecting users with restaur
 ### **🟢 Authentication**
 | Method | Endpoint        | Description           |
 |--------|----------------|-----------------------|
-| `POST` | `/api/auth/register` | User registration |
-| `POST` | `/api/auth/login` | User login (JWT)   |
-| `GET`  | `/api/auth/me` | Get logged-in user   |
+| `POST` | `/auth/register` | User registration |
+| `POST` | `/auth/login` | User login (JWT)   |
+| `GET`  | `/auth/me` | Get logged-in user   |
 
 ### **🟢 Food**
 | Method | Endpoint        | Description           |
