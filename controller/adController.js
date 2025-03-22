@@ -54,4 +54,19 @@ const getAdByUser = async (req, res) => {
   }
 };
 
-module.exports = { addAd, getAllAd, getAdByUser };
+const deleteAd = async (req, res) => {
+  const {id} = req.params
+  try {
+    const result = await Ad.findByIdAndDelete({_id:id})
+    res
+      .status(201)
+      .send({ success: true, message: "Ad Deleted Successfully", data: result });
+  } catch (error) {
+    console.error("Error in get ads by user", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Server Error", error: error.message });
+  }
+}
+
+module.exports = { addAd, getAllAd, getAdByUser, deleteAd };
