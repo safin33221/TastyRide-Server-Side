@@ -69,4 +69,20 @@ const deleteAd = async (req, res) => {
   }
 }
 
-module.exports = { addAd, getAllAd, getAdByUser, deleteAd };
+const updateAdStatus = async (req, res) => {
+  const {id} = req.params
+  const {status} = req.body
+  try {
+    const ad = await Ad.findByIdAndUpdate(id, {status: status})
+    res
+      .status(201)
+      .send({ success: true, message: "Ad Updated Successfully", data: ad });
+  } catch (error) {
+    console.error("Error in get ads by user", error);
+    res
+      .status(500)
+      .send({ success: false, message: "Server Error", error: error.message });
+  }
+}
+
+module.exports = { addAd, getAllAd, getAdByUser, deleteAd, updateAdStatus };
