@@ -9,7 +9,7 @@ const restaurantDetailsSchema = new mongoose.Schema({
     phoneNumber: {
         type: String
     },
-    location: {
+    address: {
         type: String
     },
     profilePhoto: {
@@ -18,7 +18,7 @@ const restaurantDetailsSchema = new mongoose.Schema({
     coverPhoto: {
         type: String
     },
-    Description: {
+    description: {
         type: String
     },
 })
