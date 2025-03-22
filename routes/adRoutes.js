@@ -1,5 +1,5 @@
 const express = require('express');
-const { addAd, getAllAd, getAdByUser } = require('../controller/adController');
+const { addAd, getAllAd, getAdByUser, deleteAd } = require('../controller/adController');
 
 const router = express.Router()
 
@@ -11,5 +11,8 @@ router.get("/ad", getAllAd)
 
 // get ad by user 
 router.get("/ad/:email", getAdByUser)
+
+//delete a ad
+router.delete("/ad/:id", deleteAd)
 
 module.exports = router
