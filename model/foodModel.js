@@ -41,7 +41,9 @@ const foodSchema = new mongoose.Schema({
         required: true,
         trim: true,
         lowercase: true
-    }
+    },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 });
 
 const Food = mongoose.model("Food", foodSchema);
