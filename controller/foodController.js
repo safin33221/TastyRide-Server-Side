@@ -40,6 +40,11 @@ const getAllFood = async (req, res) => {
   }
 };
 
+// get a single food
+const getSingleFood = async (req, res) => {
+
+}
+
 const getFoodByEmail = async (req, res) => {
   const { email } = req.query; // Email passed as query parameter
 
@@ -103,4 +108,4 @@ const deleteFood = async (req, res) => {
   }
 };
 
-module.exports = { addFood, getAllFood, getFoodByEmail, updateFood, deleteFood };
+module.exports = { addFood, getAllFood, getFoodByEmail, updateFood, deleteFood, getSingleFood };
