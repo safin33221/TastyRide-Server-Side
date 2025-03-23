@@ -14,7 +14,7 @@ router.get("/foods/:id", getSingleFood);
 // food reaction
 router.post("/foods/reaction/:id", foodReaction);
 
-router.get('/foods/by-email', getFoodByEmail); // New route for fetching by email
+router.get('/food/by-email/:email', getFoodByEmail); // New route for fetching by email
 
 router.put('/foods/:id', updateFood); // New route for updating
 

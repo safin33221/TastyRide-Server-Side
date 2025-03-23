@@ -2,7 +2,6 @@ const Ad = require("../model/adModel");
 
 const addAd = async (req, res) => {
   const { title, description, image, addedBy } = req.body;
-  console.log(req.body);
   try {
     const newAd = new Ad({
       title,
