@@ -1,21 +1,22 @@
 const User = require("../model/authModel");
 
 const registerUser = async (req, res) => {
-  const { username, email, photo } = req.body;
+  const { username, email, photo, role } = req.body;
   try {
     //Check Existing User
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).send({ message: "User already exist" });
+      return res.send({ message: "User already exist" });
     }
 
     //Save New user in DB
-    const nweUser = new User({
+    const newUser = new User({
       username,
       photo,
       email,
+      role
     });
-    await nweUser.save();
+    await newUser.save();
     res.status(201).send({ message: "User Registered Successfully" });
   } catch (error) {
     res.status(500).send({ message: "server Error" });
@@ -38,13 +39,13 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    res.json(user );
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
@@ -108,4 +109,37 @@ const deleteUser = async (req, res) => {
 };
 
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser };
+
+//Update Restarunt Profile
+const updateResturantProfile = async (req, res) => {
+  const email = req.params.email
+
+  const data = req.body
+
+  const user = await User.findOne({ email })
+
+  //check User
+  if (!user) return res.send({ message: 'user not found' })
+
+  //Check user role>>
+  if (user.role != 'restaurant') return res.send({ message: 'only restaurant can update restaurant details' })
+
+  try {
+
+    //update resturant Details
+
+    user.restaurantDetails = {
+      ...user.restaurantDetails,
+      ...data
+    }
+
+    await user.save()
+    res.status(200).json({ message: "Restaurant profile updated successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+
+}
+
+
+module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile };
