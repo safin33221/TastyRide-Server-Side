@@ -108,7 +108,29 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// update user profile
+const updateUserProfile = async (req, res) => {
+  const {email}  = req.params;
+  const { username, photo } = req.body;
+ 
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+       {email} , // Find user by email
+      { username, photo }, // Update these fields
+      { new: true } // Return updated document
+    );
 
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User updated successfully", updatedUser });
+
+  }catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+
+}
 
 //Update Restarunt Profile
 const updateResturantProfile = async (req, res) => {
@@ -142,4 +164,4 @@ const updateResturantProfile = async (req, res) => {
 }
 
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile };
+module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile };
