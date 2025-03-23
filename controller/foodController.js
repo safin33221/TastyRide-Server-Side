@@ -40,6 +40,24 @@ const getAllFood = async (req, res) => {
   }
 };
 
+// get a single food
+const getSingleFood = async (req, res) => {
+  const id = req.params.id; // Food ID from URL
+  try {
+    const food = await Food.findById(id);
+
+    if (!food) {
+      return res.status(404).json({ message: "Food item not found" });
+    }
+
+    res.status(200).send(food);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+
+
+}
+
 const getFoodByEmail = async (req, res) => {
   const { email } = req.query; // Email passed as query parameter
 
@@ -103,4 +121,4 @@ const deleteFood = async (req, res) => {
   }
 };
 
-module.exports = { addFood, getAllFood, getFoodByEmail, updateFood, deleteFood };
+module.exports = { addFood, getAllFood, getFoodByEmail, updateFood, deleteFood, getSingleFood };
