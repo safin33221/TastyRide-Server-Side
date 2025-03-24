@@ -111,12 +111,12 @@ const deleteUser = async (req, res) => {
 // update user profile
 const updateUserProfile = async (req, res) => {
   const {email}  = req.params;
-  const { username, photo } = req.body;
+  const { username, photo, phone, address } = req.body;
  
   try {
     const updatedUser = await User.findOneAndUpdate(
        {email} , // Find user by email
-      { username, photo }, // Update these fields
+      { username, photo, phone, address }, // Update these fields
       { new: true } // Return updated document
     );
 

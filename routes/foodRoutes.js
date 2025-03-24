@@ -12,7 +12,7 @@ router.get("/foods", getAllFood)
 router.get("/foods/:id", getSingleFood);
 
 // food reaction
-router.post("/foods/reaction/:id", foodReaction);
+router.patch("/foods/reaction/:id", foodReaction);
 
 router.get('/food/by-email/:email', getFoodByEmail); // New route for fetching by email
 
