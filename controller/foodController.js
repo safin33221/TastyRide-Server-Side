@@ -92,7 +92,7 @@ const getSingleFood = async (req, res) => {
 };
 
 const getFoodByEmail = async (req, res) => {
-  const { email } = req.query; // Email passed as query parameter
+  const  email  = req.params.email // Email passed as query parameter
 
   try {
     if (!email) {
