@@ -1,16 +1,34 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const ChatBot = require("../model/chatBotModel");
 const scrapeWebsite = require("../utils/scrapper");
+const dataset = require("../utils/trainingData.json")
 
 
 // Initialize Google Gemini AI
 const genAI = new GoogleGenerativeAI("AIzaSyA9Sfe6W_uj6w9bNGAQxPFMrkMIhU3OMfg");
 
+// custom response 
+const getDatasetResponse = (qs) => {
+  for(let entry of dataset){
+    if(qs?.toLowerCase().includes(entry.question?.toLowerCase())){
+      return entry.answer
+    }
+  }
+  return null
+}
+
 // Chatbot API Route
 const postChat = async (req, res) => {
   try {
-    const { userMessage} = req.body;
+    const { message} = req.body;
     const websiteUrl = "https://tastyride-cd1a3.web.app/"
+
+    console.log(message)
+    // check dataset for custom response 
+    const datasetReply = getDatasetResponse(message)
+    if(datasetReply){
+      return res.json({reply: datasetReply})
+    }
 
     // Check if website content is already in the database
     let websiteData = await ChatBot.findOne({ url: websiteUrl });
@@ -33,7 +51,7 @@ const postChat = async (req, res) => {
 
     // Send the message to the chat session
     const result = await chat.sendMessage(
-      `Website content:\n${websiteData.content}\n\nUser: ${userMessage}`
+      `Website content:\n${websiteData.content}\n\nUser: ${message}`
     );
 
     // Return the response to the user
