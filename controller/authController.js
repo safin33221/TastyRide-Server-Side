@@ -1,7 +1,11 @@
 const User = require("../model/authModel");
+const bcrypt = require('bcrypt')
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 0.1 * 60 * 1000; // 15 minutes
+
 
 const registerUser = async (req, res) => {
-  const { username, email, photo, role,password } = req.body;
+  const { username, email, photo, role, password } = req.body;
   try {
     //Check Existing User
     const existingUser = await User.findOne({ email });
@@ -166,4 +170,62 @@ const updateResturantProfile = async (req, res) => {
 }
 
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile };
+const logInAttempts = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    console.log(email, password);
+    const user = await User.findOne({ email })
+
+    //Find user
+    if (!user) {
+      return res.status(400).send({ message: 'user not found' })
+    }
+
+    //check  if user is locked
+    if (user.lockUntil && user.lockUntil > Date.now()) {
+
+      return res.status(403).send(user.lockUntil)
+    }
+    if (user.lockUntil && user.lockUntil < Date.now()) {
+      user.failedLoginAttempts = 0;
+      user.lockUntil = null;
+
+
+    }
+
+
+    // check is password Correct
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordCorrect) {
+      user.failedLoginAttempts += 1;
+
+
+      //lock the account if fill max attempts 
+      if (user.failedLoginAttempts >= MAX_ATTEMPTS) {
+        user.lockUntil = new Date(Date.now() + LOCK_TIME)
+
+      }
+      await user.save()
+      return res.status(401).send(user);
+    }
+
+    // Reset login attempts on success
+    user.failedLoginAttempts = 0;
+    user.lockUntil = null;
+    await user.save();
+
+    // Proceed with login
+    res.send("Login successful!");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(`server error : ${error}`)
+  }
+
+
+
+}
+
+
+module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile };
