@@ -51,4 +51,14 @@ const deleteCartFood = async (req, res) => {
   }
 };
 
-module.exports = { addToCart, getCartByEmail, deleteCartFood };
+const clearCart = async (req, res) => {
+  const {email} = req.params
+  try {
+    const result = await Cart.deleteMany({userEmail:email})
+    res.status(200).send({ message: "Deleted cart food", data: result });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+}
+
+module.exports = { addToCart, getCartByEmail, deleteCartFood, clearCart };
