@@ -4,6 +4,14 @@ const addToCart = async (req, res) => {
   const { food } = req.body;
   // console.log(food);
   try {
+    // console.log(food)
+    const existingFood = await Cart.findOne({name:food.foodName, userEmail:food.userEmail})
+    if(existingFood){
+      existingFood.quantity +=1
+      existingFood.totalPrice = existingFood.price * existingFood.quantity
+      await existingFood.save()
+      return res.status(200).send({ message: "Updated cart item", data: existingFood });
+    }
     const newCart = new Cart({
       name: food.foodName,
       image: food.image,
