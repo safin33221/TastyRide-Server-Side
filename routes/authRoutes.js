@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile} = require('../controller/authController')
+const { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile, logInAttempts} = require('../controller/authController')
 const router = express.Router()
 
 
@@ -9,6 +9,10 @@ router.get('/users', getUsers)
 
 //Post New User
 router.post('/register', registerUser)
+
+// post login user for check password validation
+router.post('/login', logInAttempts)
+
 
 //get user role by email
 router.get('/users/:email', getUser)
