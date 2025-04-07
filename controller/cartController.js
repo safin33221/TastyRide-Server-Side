@@ -1,14 +1,20 @@
 const Cart = require("../model/cartModel");
 
 const addToCart = async (req, res) => {
-  const food = req.body;
+  const {food} = req.body;
   console.log(food);
   try {
     const newCart = new Cart({
-      food,
+      name: food.foodName,
+      image: food.image,
+      price: food.price,
+      userEmail: food.userEmail,
+      foodOwner: food.addedBy,
+      quantity: 1,
+      totalPrice:food.price
     });
     await newCart.save();
-    res.status(200).send({ message: "Added to cart" });
+    res.status(200).send({ message: "Added to cart", data: newCart });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }

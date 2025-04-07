@@ -6,7 +6,8 @@ const cartSchema = new mongoose.Schema({
     quantity:Number,
     image:String,
     totalPrice:Number,
-    userEmail:String
+    userEmail:String,
+    foodOwner: String
 })
 
 const Cart = mongoose.model("cart", cartSchema)
