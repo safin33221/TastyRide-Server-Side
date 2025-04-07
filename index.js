@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const foodRoutes = require("./routes/foodRoutes");
 const adRoutes = require("./routes/adRoutes");
 const chatBotRoutes = require("./routes/chatBotRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 // Middleware
 app.use(cors());
@@ -21,6 +22,7 @@ app.use("/api", authRoutes);
 app.use("/api", foodRoutes);
 app.use("/api", adRoutes);
 app.use("/api", chatBotRoutes);
+app.use("/api", cartRoutes);
 
 
 
