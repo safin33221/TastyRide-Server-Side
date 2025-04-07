@@ -1,7 +1,7 @@
 const User = require("../model/authModel");
 
 const registerUser = async (req, res) => {
-  const { username, email, photo, role } = req.body;
+  const { username, email, photo, role,password } = req.body;
   try {
     //Check Existing User
     const existingUser = await User.findOne({ email });
@@ -14,8 +14,10 @@ const registerUser = async (req, res) => {
       username,
       photo,
       email,
+      password,
       role
     });
+    console.log(newUser);
     await newUser.save();
     res.status(201).send({ message: "User Registered Successfully" });
   } catch (error) {
@@ -110,12 +112,12 @@ const deleteUser = async (req, res) => {
 
 // update user profile
 const updateUserProfile = async (req, res) => {
-  const {email}  = req.params;
+  const { email } = req.params;
   const { username, photo, phone, address } = req.body;
- 
+
   try {
     const updatedUser = await User.findOneAndUpdate(
-       {email} , // Find user by email
+      { email }, // Find user by email
       { username, photo, phone, address }, // Update these fields
       { new: true } // Return updated document
     );
@@ -126,7 +128,7 @@ const updateUserProfile = async (req, res) => {
 
     res.json({ message: "User updated successfully", updatedUser });
 
-  }catch (error) {
+  } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 
