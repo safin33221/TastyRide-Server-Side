@@ -1,5 +1,6 @@
 const { get } = require("mongoose");
 const Food = require("./../model/foodModel");
+const User = require("./../model/authModel");
 
 const addFood = async (req, res) => {
   const {
@@ -75,7 +76,7 @@ const getAllFood = async (req, res) => {
   }
 };
 
-// get a single food
+// get a single food with restaurant profile information
 const getSingleFood = async (req, res) => {
   const id = req.params.id; // Food ID from URL
   try {
@@ -85,7 +86,18 @@ const getSingleFood = async (req, res) => {
       return res.status(404).json({ message: "Food item not found" });
     }
 
-    res.status(200).send(food);
+    // find restaurant profile
+    const restaurant = await User.findOne({ email: food.addedBy, role: "restaurant" })
+    .select("restaurantDetails")
+    .lean()
+
+    if(!restaurant || !restaurant.restaurantDetails) {
+      return res.status(200).json({ food, message: "Restaurant not found" });
+    }
+
+    res.status(200).send({food, 
+      restaurantName: restaurant.restaurantDetails.restaurantName, 
+      restaurantProfile: restaurant.restaurantDetails.profilePhoto});
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
@@ -115,6 +127,7 @@ const getFoodByEmail = async (req, res) => {
       .send({ success: false, message: "Server Error", error: error.message });
   }
 };
+
 
 const updateFood = async (req, res) => {
   const { id } = req.params; // Food ID from URL

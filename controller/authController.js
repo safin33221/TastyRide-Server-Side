@@ -58,6 +58,37 @@ const getUser = async (req, res) => {
 };
 
 
+// get restaurant profile by email
+const getRestaurantProfile = async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    // check if email is valid
+    if(!email || !email.includes('@')) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    // find restaurant by email
+    const restaurant = await User.findOne({ email, role: 'restaurant' });
+
+    // check if restaurant exists
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    // check if restaurant details are available
+    if (!restaurant.restaurantDetails) {
+      return res.status(404).json({ message: "Restaurant profile does not set up yet"});
+    }
+
+    // return restaurant details
+    res.status(200).json(restaurant.restaurantDetails);
+  }
+  catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });  
+  }
+}
+
 
 const updateUserRole = async (req, res) => {
   try {
@@ -228,4 +259,4 @@ const logInAttempts = async (req, res) => {
 }
 
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile };
+module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile, getRestaurantProfile };
