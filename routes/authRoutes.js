@@ -17,7 +17,7 @@ router.post('/login', logInAttempts)
 router.get('/users/:email', getUser)
 
 // get restaurant profile by email
-router.get('/restaruntProfile/:email', getRestaurantProfile)
+router.get('/restaurantProfile/:email', getRestaurantProfile)
 
 // Update user role
 router.put('/users/:id', updateUserRole);
