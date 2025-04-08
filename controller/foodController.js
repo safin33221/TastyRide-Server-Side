@@ -76,7 +76,7 @@ const getAllFood = async (req, res) => {
   }
 };
 
-// get a single food
+// get a single food with restaurant profile information
 const getSingleFood = async (req, res) => {
   const id = req.params.id; // Food ID from URL
   try {
@@ -86,16 +86,13 @@ const getSingleFood = async (req, res) => {
       return res.status(404).json({ message: "Food item not found" });
     }
 
-
     // find restaurant profile
     const restaurant = await User.findOne({ email: food.addedBy, role: "restaurant" })
     .select("restaurantDetails")
     .lean()
 
-
-
     if(!restaurant || !restaurant.restaurantDetails) {
-      return res.status(404).json({ message: "Restaurant not found" });
+      return res.status(200).json({ food, message: "Restaurant not found" });
     }
 
     res.status(200).send({food, 
