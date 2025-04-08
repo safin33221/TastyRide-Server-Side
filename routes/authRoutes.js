@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile, logInAttempts, getRestaurantProfile} = require('../controller/authController')
+const { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile, logInAttempts, getRestaurantProfile, allRestaurants } = require('../controller/authController')
 const router = express.Router()
 
 
@@ -18,6 +18,9 @@ router.get('/users/:email', getUser)
 
 // get restaurant profile by email
 router.get('/restaurantProfile/:email', getRestaurantProfile)
+
+//get restaurant Profile
+router.get('/allRestaurants', allRestaurants)
 
 // Update user role
 router.put('/users/:id', updateUserRole);

@@ -64,7 +64,7 @@ const getRestaurantProfile = async (req, res) => {
     const email = req.params.email;
 
     // check if email is valid
-    if(!email || !email.includes('@')) {
+    if (!email || !email.includes('@')) {
       return res.status(400).json({ message: "Invalid email address" });
     }
 
@@ -78,14 +78,14 @@ const getRestaurantProfile = async (req, res) => {
 
     // check if restaurant details are available
     if (!restaurant.restaurantDetails) {
-      return res.status(404).json({ message: "Restaurant profile does not set up yet"});
+      return res.status(404).json({ message: "Restaurant profile does not set up yet" });
     }
 
     // return restaurant details
     res.status(200).json(restaurant.restaurantDetails);
   }
   catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });  
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
 
@@ -167,6 +167,13 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 
+}
+
+//get Restaurant Profile
+
+const allRestaurants = async (req, res) => {
+  const restaurants = await User.find({ role: 'restaurant' })
+  res.status(200).send(restaurants)
 }
 
 //Update Restarunt Profile
@@ -259,4 +266,4 @@ const logInAttempts = async (req, res) => {
 }
 
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile, getRestaurantProfile };
+module.exports = { registerUser, allRestaurants, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile, getRestaurantProfile };
