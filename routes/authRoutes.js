@@ -46,6 +46,6 @@ router.patch('/users/:email', updateUserProfile);
 router.delete('/users/:id', deleteUser);
 
 // subscribe to newsletter
-router.patch('/subscribe/:email', subscribeToNewsletter)
+router.patch('/subscribe', subscribeToNewsletter)
 
 module.exports = router

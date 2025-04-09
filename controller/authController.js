@@ -268,7 +268,7 @@ const logInAttempts = async (req, res) => {
 // subscribe user to newletter
 const subscribeToNewsletter = async (req, res) => {
   try {
-    const email  = req.params.email;
+    const {email}  = req.body;
 
     // valide email
     if (!email || !email.includes('@')) {
