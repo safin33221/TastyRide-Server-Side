@@ -1,6 +1,18 @@
 const express = require('express')
 
-const { registerUser, getUsers, getUser, updateUserRole, deleteUser, updateResturantProfile, updateUserProfile, logInAttempts, getRestaurantProfile, allRestaurants } = require('../controller/authController')
+const { 
+    registerUser, 
+    getUsers, 
+    getUser, 
+    updateUserRole, 
+    deleteUser, 
+    updateResturantProfile, 
+    updateUserProfile, 
+    logInAttempts, 
+    getRestaurantProfile, 
+    allRestaurants,
+    subscribeToNewsletter
+ } = require('../controller/authController')
 const router = express.Router()
 
 
@@ -30,8 +42,10 @@ router.patch('/restaruntProfile/:email', updateResturantProfile);
 // update user profile
 router.patch('/users/:email', updateUserProfile);
 
-
 // Delete a user
 router.delete('/users/:id', deleteUser);
+
+// subscribe to newsletter
+router.patch('/subscribe/:email', subscribeToNewsletter)
 
 module.exports = router

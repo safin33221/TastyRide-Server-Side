@@ -265,5 +265,49 @@ const logInAttempts = async (req, res) => {
 
 }
 
+// subscribe user to newletter
+const subscribeToNewsletter = async (req, res) => {
+  try {
+    const email  = req.params.email;
 
-module.exports = { registerUser, allRestaurants, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile, getRestaurantProfile };
+    // valide email
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if(user.isSubscribed) {
+      return res.status(400).json({ message: "Already subscribed to the newsletter" });
+    }
+
+    // Update the user's subscription status
+    user.isSubscribed = true;
+    await user.save();
+
+    res.status(200).json({ message: "Successfully subscribed to the newsletter" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+}
+
+
+module.exports = { 
+  registerUser, 
+  allRestaurants, 
+  getUsers, 
+  getUser, 
+  updateUserRole, 
+  deleteUser, 
+  logInAttempts, 
+  updateResturantProfile, 
+  updateUserProfile, 
+  getRestaurantProfile,
+  subscribeToNewsletter
+};
