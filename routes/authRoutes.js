@@ -11,7 +11,8 @@ const {
     logInAttempts, 
     getRestaurantProfile, 
     allRestaurants,
-    subscribeToNewsletter
+    subscribeToNewsletter,
+    getSubscribedUser
  } = require('../controller/authController')
 const router = express.Router()
 
@@ -46,6 +47,9 @@ router.patch('/users/:email', updateUserProfile);
 router.delete('/users/:id', deleteUser);
 
 // subscribe to newsletter
-router.patch('/subscribe', subscribeToNewsletter)
+router.patch('/subscribe', subscribeToNewsletter);
+
+// get the subscribed user
+router.get('/subscribe/:email', getSubscribedUser);
 
 module.exports = router

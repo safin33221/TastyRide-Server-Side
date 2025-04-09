@@ -297,6 +297,27 @@ const subscribeToNewsletter = async (req, res) => {
   }
 }
 
+// get the subscribed user
+const getSubscribedUser = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+     // valide email
+     if (!email || !email.includes('@')) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    const user = await User.findOne({email}).select('isSubscribed');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({isSubscribed: user.isSubscribed});
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message });
+  }
+};
+
 
 module.exports = { 
   registerUser, 
@@ -309,5 +330,6 @@ module.exports = {
   updateResturantProfile, 
   updateUserProfile, 
   getRestaurantProfile,
-  subscribeToNewsletter
+  subscribeToNewsletter,
+  getSubscribedUser
 };
