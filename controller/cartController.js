@@ -20,7 +20,9 @@ const addToCart = async (req, res) => {
       foodOwner: food.addedBy,
       quantity: 1,
       totalPrice: food.price,
+      foodId:food._id
     });
+    // console.log(newCart);
     await newCart.save();
     res.status(200).send({ message: "Added to cart", data: newCart });
   } catch (error) {
