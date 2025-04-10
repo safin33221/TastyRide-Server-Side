@@ -22,6 +22,10 @@ const restaurantDetailsSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    followers: {
+        type: [string], // array of user emails who follow this restaurant
+        default: [],
+    },
 })
 
 const userSchema = new mongoose.Schema({
