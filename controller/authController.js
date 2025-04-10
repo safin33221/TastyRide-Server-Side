@@ -304,17 +304,17 @@ const getSubscribedUser = async (req, res) => {
 
      // valide email
      if (!email || !email.includes('@')) {
-      return res.status(400).json({ message: "Invalid email address" });
+      return res.status(400).json({ message: "Invalid email address", isSubscribed: false });
     }
 
     const user = await User.findOne({email}).select('isSubscribed');
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found', isSubscribed: false });
     }
 
     res.status(200).json({isSubscribed: user.isSubscribed});
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message });
+    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message, isSubscribed: false });
   }
 };
 
