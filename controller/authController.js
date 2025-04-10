@@ -328,11 +328,14 @@ const followRestaurant = async (req, res) =>{
     }
     if(restaurant.restaurantDetails.followers.includes(userEmail)){
       restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
+      await restaurant.save();
+      return res.status(200).json({message: "Unfollowed the restaurant successfully", isFollowing: false});
     }else{
       restaurant.restaurantDetails.followers.push(userEmail); //user not following the restaurant and follow it
+      await restaurant.save();
+      return res.status(200).json({message: "Followed the restaurant successfully", isFollowing: true});
     }
-    await restaurant.save();
-
+    
   }catch(error){
     res.status(500).json({ message: "Server error", error: error.message });
   }

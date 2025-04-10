@@ -54,6 +54,6 @@ router.patch('/subscribe', subscribeToNewsletter);
 router.get('/subscribe/:email', getSubscribedUser);
 
 // follow restaurant
-router.patch('/followRestaurant', followRestaurant);
+router.patch('/restaurant/follow', followRestaurant);
 
 module.exports = router
