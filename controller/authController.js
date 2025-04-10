@@ -64,7 +64,7 @@ const getRestaurantProfile = async (req, res) => {
     const email = req.params.email;
 
     // check if email is valid
-    if(!email || !email.includes('@')) {
+    if (!email || !email.includes('@')) {
       return res.status(400).json({ message: "Invalid email address" });
     }
 
@@ -78,14 +78,14 @@ const getRestaurantProfile = async (req, res) => {
 
     // check if restaurant details are available
     if (!restaurant.restaurantDetails) {
-      return res.status(404).json({ message: "Restaurant profile does not set up yet"});
+      return res.status(404).json({ message: "Restaurant profile does not set up yet" });
     }
 
     // return restaurant details
     res.status(200).json(restaurant.restaurantDetails);
   }
   catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });  
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 }
 
@@ -167,6 +167,13 @@ const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 
+}
+
+//get Restaurant Profile
+
+const allRestaurants = async (req, res) => {
+  const restaurants = await User.find({ role: 'restaurant' })
+  res.status(200).send(restaurants)
 }
 
 //Update Restarunt Profile
@@ -258,5 +265,99 @@ const logInAttempts = async (req, res) => {
 
 }
 
+// subscribe user to newletter
+const subscribeToNewsletter = async (req, res) => {
+  try {
+    const {email}  = req.body;
 
-module.exports = { registerUser, getUsers, getUser, updateUserRole, deleteUser, logInAttempts, updateResturantProfile, updateUserProfile, getRestaurantProfile };
+    // valide email
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ message: "Invalid email address" });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if(user.isSubscribed) {
+      return res.status(400).json({ message: "Already subscribed to the newsletter" });
+    }
+
+    // Update the user's subscription status
+    user.isSubscribed = true;
+    await user.save();
+
+    res.status(200).json({ message: "Successfully subscribed to the newsletter" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+}
+
+// get the subscribed user
+const getSubscribedUser = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+     // valide email
+     if (!email || !email.includes('@')) {
+      return res.status(400).json({ message: "Invalid email address", isSubscribed: false });
+    }
+
+    const user = await User.findOne({email}).select('isSubscribed');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found', isSubscribed: false });
+    }
+
+    res.status(200).json({isSubscribed: user.isSubscribed});
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message, isSubscribed: false });
+  }
+};
+
+// follow restaurant
+const followRestaurant = async (req, res) =>{
+  const {userEmail, restaurantEmail} = req.body;
+  try{
+    const restaurant = await User.findOne({email: restaurantEmail});
+    console.log(userEmail, restaurantEmail, restaurant);
+    if(!restaurant) {
+      return res.status(404).json({message: "Restaurant not found"});
+    }
+    if(!restaurant.restaurantDetails) {
+      return res.status(404).json({message: "Restaurant profile does not set up yet"});
+    }
+    if(restaurant.restaurantDetails.followers.includes(userEmail)){
+      restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
+      await restaurant.save();
+      return res.status(200).json({message: "Unfollowed the restaurant successfully", isFollowing: false});
+    }else{
+      restaurant.restaurantDetails.followers.push(userEmail); //user not following the restaurant and follow it
+      await restaurant.save();
+      return res.status(200).json({message: "Followed the restaurant successfully", isFollowing: true});
+    }
+    
+  }catch(error){
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
+
+module.exports = { 
+  registerUser, 
+  allRestaurants, 
+  getUsers, 
+  getUser, 
+  updateUserRole, 
+  deleteUser, 
+  logInAttempts, 
+  updateResturantProfile, 
+  updateUserProfile, 
+  getRestaurantProfile,
+  subscribeToNewsletter,
+  getSubscribedUser,
+  followRestaurant
+};
