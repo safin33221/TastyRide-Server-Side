@@ -304,19 +304,46 @@ const getSubscribedUser = async (req, res) => {
 
      // valide email
      if (!email || !email.includes('@')) {
-      return res.status(400).json({ message: "Invalid email address" });
+      return res.status(400).json({ message: "Invalid email address", isSubscribed: false });
     }
 
     const user = await User.findOne({email}).select('isSubscribed');
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found', isSubscribed: false });
     }
 
     res.status(200).json({isSubscribed: user.isSubscribed});
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message });
+    res.status(500).json({ message: "Failed to fetch subscribed users", error: error.message, isSubscribed: false });
   }
 };
+
+// follow restaurant
+const followRestaurant = async (req, res) =>{
+  const {userEmail, restaurantEmail} = req.body;
+  try{
+    const restaurant = await User.findOne({email: restaurantEmail});
+    console.log(userEmail, restaurantEmail, restaurant);
+    if(!restaurant) {
+      return res.status(404).json({message: "Restaurant not found"});
+    }
+    if(!restaurant.restaurantDetails) {
+      return res.status(404).json({message: "Restaurant profile does not set up yet"});
+    }
+    if(restaurant.restaurantDetails.followers.includes(userEmail)){
+      restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
+      await restaurant.save();
+      return res.status(200).json({message: "Unfollowed the restaurant successfully", isFollowing: false});
+    }else{
+      restaurant.restaurantDetails.followers.push(userEmail); //user not following the restaurant and follow it
+      await restaurant.save();
+      return res.status(200).json({message: "Followed the restaurant successfully", isFollowing: true});
+    }
+    
+  }catch(error){
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
 
 
 module.exports = { 
@@ -331,5 +358,6 @@ module.exports = {
   updateUserProfile, 
   getRestaurantProfile,
   subscribeToNewsletter,
-  getSubscribedUser
+  getSubscribedUser,
+  followRestaurant
 };
