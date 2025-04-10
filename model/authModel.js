@@ -23,7 +23,7 @@ const restaurantDetailsSchema = new mongoose.Schema({
         type: String
     },
     followers: {
-        type: [string], // array of user emails who follow this restaurant
+        type: [String], // array of user emails who follow this restaurant
         default: [],
     },
 })
