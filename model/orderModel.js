@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
@@ -15,7 +16,6 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-   
   },
   total_amount: {
     type: Number,
@@ -23,12 +23,13 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'processing', 'delivered', 'cancelled'],
-    default: 'pending'
+    enum: ['Pending', 'Cooking', 'On the Way', 'Delivered', 'Cancelled'], // Added Cancelled
+    default: 'Pending'
   },
   createdAt: {
     type: Date,
     default: Date.now
-    }
+  }
 });
+
 module.exports = mongoose.model('Order', orderSchema);
