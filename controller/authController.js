@@ -328,7 +328,7 @@ const followRestaurant = async (req, res) =>{
       return res.status(404).json({message: "Restaurant not found"});
     }
     if(!restaurant.restaurantDetails) {
-      return res.status(404).json({message: "Restaurant profile does not set up yet"});
+      return res.status(404).json({message: "Restaurant profile does not set up yet, so can't follow it"});
     }
     if(restaurant.restaurantDetails.followers.includes(userEmail)){
       restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
