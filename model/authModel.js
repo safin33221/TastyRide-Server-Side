@@ -58,6 +58,10 @@ const userSchema = new mongoose.Schema({
         enum: ['customer', 'admin', 'restaurant'],
         default: 'customer',
     },
+    isSubscribed: {
+        type: Boolean,
+        default: false
+    },
     failedLoginAttempts: { type: Number, default: 0 }, // কয়বার ভুল করেছে
     lockUntil: { type: Date, default: null }, // কখন পর্যন্ত lock থাকবে
     restaurantDetails: {
