@@ -31,3 +31,22 @@ export const submitReview = async (req, res) => {
     });
   }
 };
+
+// GET /api/reviews - Get all reviews with pagination
+export const getAllReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find();
+    res.status(200).send({
+      success: true,
+      message: 'Reviews fetched successfully',
+      data: reviews,
+    });
+  } catch (error) {
+    console.error('Error in getAllReviews:', error);
+    res.status(500).send({
+      success: false,
+      message: 'Server Error',
+      error: error.message,
+    });
+  }
+};
