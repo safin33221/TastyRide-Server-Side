@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
       password,
       role
     });
-    console.log(newUser);
+    // console.log(newUser);
     await newUser.save();
     res.status(201).send({ message: "User Registered Successfully" });
   } catch (error) {
@@ -211,7 +211,7 @@ const updateResturantProfile = async (req, res) => {
 const logInAttempts = async (req, res) => {
   try {
     const { email, password } = req.body
-    console.log(email, password);
+    // console.log(email, password);
     const user = await User.findOne({ email })
 
     //Find user
@@ -323,12 +323,12 @@ const followRestaurant = async (req, res) =>{
   const {userEmail, restaurantEmail} = req.body;
   try{
     const restaurant = await User.findOne({email: restaurantEmail});
-    console.log(userEmail, restaurantEmail, restaurant);
+    // console.log(userEmail, restaurantEmail, restaurant);
     if(!restaurant) {
       return res.status(404).json({message: "Restaurant not found"});
     }
     if(!restaurant.restaurantDetails) {
-      return res.status(404).json({message: "Restaurant profile does not set up yet"});
+      return res.status(404).json({message: "Restaurant profile does not set up yet, so can't follow it"});
     }
     if(restaurant.restaurantDetails.followers.includes(userEmail)){
       restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
