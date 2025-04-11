@@ -101,11 +101,11 @@ const deleteOrder = async (req, res) => {
 // Get Orders by User Email
 const getUserOrders = async (req, res) => {
   const {email}  = req.params;
-  console.log("Fetching orders for user:", email);
+  // console.log("Fetching orders for user:", email);
 
   try {
     const orders = await Order.find({ "info.cus_email": email });
-    console.log(orders);
+    // console.log(orders);
     res.status(200).send({
       success: true,
       message: "Orders fetched successfully",
