@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const notificationSchema = new mongoose.Schema({
-    cus_email: {
+    to_email: {
+        type: String,
+        require: true
+    },
+    from_email: {
         type: String,
         require: true
     },
@@ -14,8 +18,12 @@ const notificationSchema = new mongoose.Schema({
         require: true,
     },
     read: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
+    },
+    data: {
+        type: Object,
+        default: null
     },
     createdAt: {
         type: Date,
