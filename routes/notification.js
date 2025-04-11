@@ -7,7 +7,7 @@ const router = express.Router()
 router.post('/notifications', newNotification)
 
 
-router.get('/notifications', getNotification)
+router.get('/notifications/:email', getNotification)
 
 
 module.exports = router

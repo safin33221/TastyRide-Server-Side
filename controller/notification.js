@@ -20,8 +20,10 @@ const newNotification = async (req, res) => {
 
 const getNotification = async (req, res) => {
     try {
-        const notifications = await notification.find({})
-        res.status(200).send( notifications )
+        const { email } = req.params;
+        const query = { to_email: email }
+        const notifications = await notification.find(query )
+        res.status(200).send(notifications)
     } catch (error) {
         res.status(404).send({ message: 'sever error', error })
     }
