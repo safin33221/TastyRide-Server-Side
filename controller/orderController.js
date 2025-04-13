@@ -1,6 +1,16 @@
 
 const Order = require('../model/orderModel');
 
+
+const getAllOrders = async (req, res) => {
+  try {
+    const results = await Order.find()
+    res.status(200).send(results)
+  } catch (error) {
+    return res.status(500).send({ message: 'Sever error', error })
+  }
+}
+
 // Place Order
 const placeOrder = async (req, res) => {
   const { info, cart, restaurantEmail, paymentMethod, total_amount, status, createdAt } = req.body;
@@ -100,7 +110,7 @@ const deleteOrder = async (req, res) => {
 
 // Get Orders by User Email
 const getUserOrders = async (req, res) => {
-  const {email}  = req.params;
+  const { email } = req.params;
   // console.log("Fetching orders for user:", email);
 
   try {
@@ -158,4 +168,4 @@ const cancelOrder = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder };
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getAllOrders };
