@@ -6,6 +6,16 @@
 
 const Order = require('../model/orderModel');
 
+
+const getAllOrders = async (req, res) => {
+  try {
+    const results = await Order.find()
+    res.status(200).send(results)
+  } catch (error) {
+    return res.status(500).send({ message: 'Sever error', error })
+  }
+}
+
 // Place Order
 const placeOrder = async (req, res) => {
   const { info, cart, restaurantEmail, paymentMethod, total_amount, status, createdAt } = req.body;
@@ -189,4 +199,5 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById };
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders };
+
