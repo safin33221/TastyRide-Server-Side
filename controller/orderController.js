@@ -1,4 +1,9 @@
 
+
+
+
+
+
 const Order = require('../model/orderModel');
 
 // Place Order
@@ -6,22 +11,30 @@ const placeOrder = async (req, res) => {
   const { info, cart, restaurantEmail, paymentMethod, total_amount, status, createdAt } = req.body;
 
   try {
+    console.log("Received Order Data:", req.body); // Log the incoming data
+
+    // Validate required fields
+    if (!info || !cart || !restaurantEmail || !total_amount) {
+      return res.status(400).send({ success: false, message: "Missing required fields" });
+    }
+
     const order = new Order({
       info,
       cart,
       restaurantEmail,
       paymentMethod,
       total_amount,
-      status: status || 'Pending', // Default to 'Pending'
+      status: status || 'Pending',
       createdAt: createdAt || Date.now(),
     });
 
-    await order.save();
+    const savedOrder = await order.save();
+    console.log("Saved Order:", savedOrder); // Log the saved order
 
     res.status(201).send({
       success: true,
       message: "Order placed successfully",
-      data: order,
+      data: savedOrder,
     });
   } catch (error) {
     console.error("Error in placeOrder:", error);
@@ -52,14 +65,14 @@ const updateOrderStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-    const validStatuses = ['Pending', 'Cooking', 'On the Way', 'Delivered']; // Updated statuses
+    const validStatuses = ['Pending', 'Cooking', 'On the Way', 'Delivered'];
     if (!validStatuses.includes(status)) {
       return res.status(400).send({ success: false, message: "Invalid status" });
     }
 
     const order = await Order.findByIdAndUpdate(
       orderId,
-      { status, createdAt: Date.now() }, // Using createdAt as per your schema
+      { status, createdAt: Date.now() },
       { new: true }
     );
 
@@ -100,12 +113,10 @@ const deleteOrder = async (req, res) => {
 
 // Get Orders by User Email
 const getUserOrders = async (req, res) => {
-  const {email}  = req.params;
-  // console.log("Fetching orders for user:", email);
+  const { email } = req.params;
 
   try {
     const orders = await Order.find({ "info.cus_email": email });
-    // console.log(orders);
     res.status(200).send({
       success: true,
       message: "Orders fetched successfully",
@@ -118,8 +129,6 @@ const getUserOrders = async (req, res) => {
 };
 
 // Cancel Order
-// This function allows a user to cancel their order if it is in "Pending" status
-
 const cancelOrder = async (req, res) => {
   const { orderId } = req.params;
   const { userEmail } = req.body;
@@ -130,13 +139,10 @@ const cancelOrder = async (req, res) => {
       return res.status(404).send({ success: false, message: "Order not found" });
     }
 
-    // Check if the user is the owner of the order
-
     if (order.info.cus_email !== userEmail) {
       return res.status(403).send({ success: false, message: "Unauthorized: You can only cancel your own orders" });
     }
 
-    // Only allow cancellation if the status is "Pending"
     if (order.status !== "Pending") {
       return res.status(400).send({ success: false, message: "Order can only be cancelled if it is in Pending status" });
     }
@@ -158,4 +164,29 @@ const cancelOrder = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder };
+// Get Order by ID
+const getOrderById = async (req, res) => {
+  const { orderId } = req.params;
+  const { userEmail } = req.query;
+
+  try {
+    console.log("Fetching order:", orderId, "for user:", userEmail); // Log the fetch attempt
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      console.log("Order not found:", orderId); // Log if order isn't found
+      return res.status(404).send({ success: false, message: "Order not found" });
+    }
+
+    if (order.info.cus_email !== userEmail) {
+      return res.status(403).send({ success: false, message: "Unauthorized: You are not allowed to view this order" });
+    }
+
+    res.status(200).send({ success: true, data: order });
+  } catch (error) {
+    console.error("Error in getOrderById:", error);
+    res.status(500).send({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById };
