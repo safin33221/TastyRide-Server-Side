@@ -58,6 +58,6 @@ router.get('/subscribe/:email', getSubscribedUser);
 router.patch('/restaurant/follow', followRestaurant);
 
 // get followed restaurant
-
+router.get('/restaurant/follow', getFollowedRestaurant);
 
 module.exports = router
