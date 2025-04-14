@@ -318,7 +318,23 @@ const getSubscribedUser = async (req, res) => {
   }
 };
 
-// follow restaurant
+// get if a user already follow the restaurant or not
+const getFollowedRestaurant = async (req, res) =>{
+  // const {userEmail, restaurantEmail} = req.params;
+  const {userEmail, restaurantEmail} = req.query;
+  try{
+    const restaurant = await User.findOne({email: restaurantEmail});
+    if(restaurant && restaurant.restaurantDetails && restaurant.restaurantDetails.followers.includes(userEmail)){
+      res.status(200).json({isFollowing: true});
+    }else{
+      res.status(200).json({isFollowing: false});
+    }
+  }catch(error){
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}
+
+// follow or unfollow a restaurant
 const followRestaurant = async (req, res) =>{
   const {userEmail, restaurantEmail} = req.body;
   try{
@@ -359,5 +375,6 @@ module.exports = {
   getRestaurantProfile,
   subscribeToNewsletter,
   getSubscribedUser,
-  followRestaurant
+  followRestaurant,
+  getFollowedRestaurant
 };
