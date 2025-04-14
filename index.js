@@ -1,8 +1,10 @@
-const express = require('express');
-require('dotenv').config();
-const cors = require('cors');
-const connectDB = require('./utils/db');
-const SSLCommerzPayment = require('sslcommerz-lts');
+const express = require("express");
+require("dotenv").config();
+const cors = require("cors");
+const connectDB = require("./utils/db");
+const SSLCommerzPayment = require("sslcommerz-lts");
+const jwt = require('jsonwebtoken')
+
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -20,6 +22,13 @@ const reviewRoutes = require('./routes/reviewRoutes');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse POST data from SSLCommerz
+
+//Create json web Token
+app.post('/jwt', async (req, res) => {
+  const userinfo = req.body;
+  const token = jwt.sign(userinfo, process.env.JSON_SECRET_KEY, { expiresIn: '23h' })
+  res.send(token)
+})
 
 // Mongoose
 connectDB();

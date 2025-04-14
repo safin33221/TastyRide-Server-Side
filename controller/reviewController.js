@@ -1,6 +1,6 @@
-import Review from '../model/reviewModel.js';
+const Review = require('../model/reviewModel');
 
-export const submitReview = async (req, res) => {
+const submitReview = async (req, res) => {
   try {
     const { userId, rating, review } = req.body;
 
@@ -33,7 +33,7 @@ export const submitReview = async (req, res) => {
 };
 
 // GET /api/reviews - Get all reviews with pagination
-export const getAllReviews = async (req, res) => {
+ const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find();
     res.status(200).send({
@@ -50,3 +50,4 @@ export const getAllReviews = async (req, res) => {
     });
   }
 };
+module.exports = { submitReview, getAllReviews  }
