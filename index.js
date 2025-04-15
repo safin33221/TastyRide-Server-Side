@@ -17,6 +17,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const notification = require('./routes/notification');
 const reviewRoutes = require('./routes/reviewRoutes');
+const riderRoutes = require('./routes/riderRoute')
 
 // Middleware
 app.use(cors());
@@ -40,6 +41,7 @@ app.use('/api', cartRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', notification);
 app.use('/api', reviewRoutes);
+app.use('/api', riderRoutes)
 
 // SSLCommerz configuration
 const store_id = process.env.STORE_ID; // Your Store ID from SSLCommerz

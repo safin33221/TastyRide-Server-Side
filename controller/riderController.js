@@ -1,5 +1,5 @@
 const User = require("./../model/authModel");
-const Rider = require("./../model/riderModal");
+const Rider = require('./../model/riderModel')
 
 // apply for rider
 const applyRider = async (req, res) => {
@@ -28,8 +28,12 @@ const applyRider = async (req, res) => {
     } = req.body;
 
     const {userEmail} = req.params;
+    
 
     const user = await User.findOne({email: userEmail});
+
+    // console.log(user);
+    
 
     if (user?.riderStatus !== "none") {
       return res
@@ -62,20 +66,28 @@ const applyRider = async (req, res) => {
       status: "pending",
     });
 
-    await application.save();
+    // console.log(application);
+    // console.log(user);
 
+    await application.save();
+    
+    // console.log(application);
+    
     user.riderStatus = "pending";
     user.phone = phoneNumber;
     await user.save();
-
-    console.log(application, user)
     
+
+    // console.log(application, user)
+
     res.status(200).json({
       success: true,
       message: "Application submitted successfully",
       applicationId: application._id,
     });
   } catch (error) {
+    // console.log("server error", error.message);
+    
     return res.status(500).json({
       success: false,
       message: "Server Error",

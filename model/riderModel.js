@@ -46,7 +46,7 @@ const riderSchema = new mongoose.Schema({
   },
   parmanentAddress: {
     type: String,
-    default: none,
+    // default: "",
   },
   profilePhoto: {
     type: String, 
@@ -79,8 +79,7 @@ const riderSchema = new mongoose.Schema({
     required: true,
   },
   preferredWorkArea: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Area',
+    type: String,
     required: true,
   },
   workAvailability: {
@@ -93,7 +92,7 @@ const riderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['bank', 'mobile_wallet'],
+    enum: ['bank', 'wallet'],
     required: true,
   },
   bankAccountNumber: {
@@ -107,13 +106,13 @@ const riderSchema = new mongoose.Schema({
     type: String,
     enum: ['bKash', 'Nagad', 'Rocket', null], 
     required: function () {
-      return this.paymentMethod === 'mobile_wallet';
+      return this.paymentMethod === 'wallet';
     },
   },
   mobileWalletNumber: {
     type: String,
     required: function () {
-      return this.paymentMethod === 'mobile_wallet';
+      return this.paymentMethod === 'wallet';
     },
   },
   status: {
@@ -135,4 +134,5 @@ const riderSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Rider", riderSchema);
+const Rider = mongoose.model("Rider", riderSchema);
+module.exports = Rider;
