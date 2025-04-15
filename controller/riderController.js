@@ -27,9 +27,9 @@ const applyRider = async (req, res) => {
       mobileWalletNumber,
     } = req.body;
 
-    const userId = req.params.id;
+    const {userEmail} = req.params;
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({email: userEmail});
 
     if (user?.riderStatus !== "none") {
       return res
@@ -38,7 +38,7 @@ const applyRider = async (req, res) => {
     }
 
     const application = new Rider({
-      userId,
+      userId: user?._id,
       fullName,
       dateOfBirth,
       phoneNumber,
@@ -68,6 +68,8 @@ const applyRider = async (req, res) => {
     user.phone = phoneNumber;
     await user.save();
 
+    console.log(application, user)
+    
     res.status(200).json({
       success: true,
       message: "Application submitted successfully",
