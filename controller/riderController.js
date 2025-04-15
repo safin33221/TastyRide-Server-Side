@@ -27,13 +27,13 @@ const applyRider = async (req, res) => {
       mobileWalletNumber,
     } = req.body;
 
-    const {userEmail} = req.params;
-    
+    const { userEmail } = req.params;
 
-    const user = await User.findOne({email: userEmail});
+
+    const user = await User.findOne({ email: userEmail });
 
     // console.log(user);
-    
+
 
     if (user?.riderStatus !== "none") {
       return res
@@ -70,13 +70,13 @@ const applyRider = async (req, res) => {
     // console.log(user);
 
     await application.save();
-    
+
     // console.log(application);
-    
+
     user.riderStatus = "pending";
     user.phone = phoneNumber;
     await user.save();
-    
+
 
     // console.log(application, user)
 
@@ -87,7 +87,7 @@ const applyRider = async (req, res) => {
     });
   } catch (error) {
     // console.log("server error", error.message);
-    
+
     return res.status(500).json({
       success: false,
       message: "Server Error",
@@ -96,6 +96,19 @@ const applyRider = async (req, res) => {
   }
 };
 
+
+//get all riders
+
+const getAllRidersApplications = async (req, res) => {
+  try {
+    const result = await Rider.find()
+    res.status(200).send(result)
+  } catch (error) {
+    res.status(500).send({ message: 'server error' })
+  }
+}
+
 module.exports = {
   applyRider,
+  getAllRidersApplications
 };
