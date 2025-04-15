@@ -108,7 +108,30 @@ const getAllRidersApplications = async (req, res) => {
   }
 }
 
+//update status
+
+const updateStatus = async (req, res) => {
+  try {
+    const { userId, status } = req.body
+    const query = { userId}
+    console.log(query);
+    const updateDoc = {
+      $set: {
+        status: status
+      }
+    }
+    const result = await Rider.updateOne(query, updateDoc)
+    console.log(result);
+    res.status(200).send({ message: "update successfully", result })
+  } catch (error) {
+    res.status(500).send({ message: "server error" })
+  }
+
+
+}
+
 module.exports = {
   applyRider,
-  getAllRidersApplications
+  getAllRidersApplications,
+  updateStatus
 };
