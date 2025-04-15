@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['customer', 'admin', 'restaurant'],
+        enum: ['customer', 'admin', 'restaurant', 'rider'],
         default: 'customer',
     },
     isSubscribed: {
@@ -71,6 +71,11 @@ const userSchema = new mongoose.Schema({
     restaurantDetails: {
         type: restaurantDetailsSchema,
         default: null
+    },
+    riderStatus: {
+        type: String,
+        enum: ['none', 'pending', 'approved', 'rejected'],
+        default: 'none',
     }
 })
 
