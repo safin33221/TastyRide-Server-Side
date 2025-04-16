@@ -131,10 +131,18 @@ const updateStatus = async (req, res) => {
         }
       }
       console.log(email);
-      const user = await User.findOneAndUpdate(query, UserDoc)
+      await User.findOneAndUpdate(query, UserDoc)
       console.log(user);
     } else {
-      res.status(401).send({ message: 'error in code' })
+      const query = { email }
+      const UserDoc = {
+        $set: {
+          riderStatus: 'rejected'
+        }
+      }
+      console.log(email);
+      await User.findOneAndUpdate(query, UserDoc)
+      res.status(200).send({ message: 'rejected' })
     }
 
     res.status(200).send({ message: "update successfully", result: result })
