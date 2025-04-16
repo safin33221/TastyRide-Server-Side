@@ -1,6 +1,7 @@
+const mongoose = require('mongoose')
 const User = require("./../model/authModel");
 const Rider = require('./../model/riderModel')
-
+const ObjectId = mongoose.Types.ObjectId;
 // apply for rider
 const applyRider = async (req, res) => {
   try {
@@ -112,17 +113,31 @@ const getAllRidersApplications = async (req, res) => {
 
 const updateStatus = async (req, res) => {
   try {
-    const { userId, status } = req.body
-    const query = { userId}
-    console.log(query);
+    const { email, status } = req.body
+    console.log(email, status);
+    const query = { email }
     const updateDoc = {
       $set: {
         status: status
       }
     }
-    const result = await Rider.updateOne(query, updateDoc)
-    console.log(result);
-    res.status(200).send({ message: "update successfully", result })
+    const result = await Rider.findOneAndUpdate(query, updateDoc)
+    if (status === 'approved') {
+      const query = { email }
+      const UserDoc = {
+        $set: {
+          role: 'rider',
+          riderStatus: 'approved'
+        }
+      }
+      console.log(email);
+      const user = await User.findOneAndUpdate(query, UserDoc)
+      console.log(user);
+    } else {
+      res.status(401).send({ message: 'error in code' })
+    }
+
+    res.status(200).send({ message: "update successfully", result: result })
   } catch (error) {
     res.status(500).send({ message: "server error" })
   }
