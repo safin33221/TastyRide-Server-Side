@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
 
 const workAvailabilitySchema = new mongoose.Schema({
-    days: [{
-      type: String,
-      enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      required: true,
-    }],
-    startTime: {
-      type: String, 
-      required: true,
-    },
-    endTime: {
-      type: String,
-      required: true,
-    },
-  });
+  days: [{
+    type: String,
+    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    required: true,
+  }],
+  startTime: {
+    type: String,
+    required: true,
+  },
+  endTime: {
+    type: String,
+    required: true,
+  },
+});
 
 const riderSchema = new mongoose.Schema({
   userId: {
@@ -31,7 +31,7 @@ const riderSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  phoneNumber:{
+  phoneNumber: {
     type: String,
     required: true,
   },
@@ -49,7 +49,7 @@ const riderSchema = new mongoose.Schema({
     // default: "",
   },
   profilePhoto: {
-    type: String, 
+    type: String,
     required: true,
   },
   nationalId: {
@@ -58,12 +58,12 @@ const riderSchema = new mongoose.Schema({
     // In production, encrypt this field
   },
   nidPicture: {
-    type: String, 
+    type: String,
     required: true,
   },
   vehicleType: {
     type: String,
-    enum: ['bike', 'car', 'scooter'],
+    enum: ['bike', 'car', 'scooter', 'bicycle'],
     required: true,
   },
   vehicleNumberPlate: {
@@ -75,8 +75,8 @@ const riderSchema = new mongoose.Schema({
     required: true,
   },
   drivingLicenseImage: {
-    type: String, 
-    required: true,
+    type: String,
+   
   },
   preferredWorkArea: {
     type: String,
@@ -104,7 +104,7 @@ const riderSchema = new mongoose.Schema({
   },
   mobileWalletProvider: {
     type: String,
-    enum: ['bKash', 'Nagad', 'Rocket', null], 
+    enum: ['bKash', 'Nagad', 'Rocket', null],
     required: function () {
       return this.paymentMethod === 'wallet';
     },
