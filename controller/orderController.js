@@ -1,9 +1,3 @@
-
-
-
-
-
-
 const Order = require('../model/orderModel');
 
 
@@ -35,6 +29,7 @@ const placeOrder = async (req, res) => {
       paymentMethod,
       total_amount,
       status: status || 'Pending',
+      acceptedBy,
       createdAt: createdAt || Date.now(),
     });
 
@@ -75,7 +70,7 @@ const updateOrderStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-    const validStatuses = ['Pending', 'Cooking', 'On the Way', 'Delivered'];
+    const validStatuses = ['Pending', 'Cooking', 'On-the-Way', 'Delivered', 'Accepted'];
     if (!validStatuses.includes(status)) {
       return res.status(400).send({ success: false, message: "Invalid status" });
     }
@@ -100,6 +95,18 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).send({ success: false, message: "Server Error", error: error.message });
   }
 };
+
+// update order acceptedBy for rider 
+const acceptedByRider = async (req, res) => {
+  const {orderId} = req.params
+  const {status} = req.body
+  try {
+    
+  } catch (error) {
+    console.error("Error in acceptedByRider:", error);
+    res.status(500).send({ success: false, message: "Server Error", error: error.message });
+  }
+}
 
 // Delete Order
 const deleteOrder = async (req, res) => {
@@ -180,7 +187,7 @@ const getOrderById = async (req, res) => {
   const { userEmail } = req.query;
 
   try {
-    console.log("Fetching order:", orderId, "for user:", userEmail); // Log the fetch attempt
+    // console.log("Fetching order:", orderId, "for user:", userEmail); // Log the fetch attempt
     const order = await Order.findById(orderId);
 
     if (!order) {
@@ -199,5 +206,5 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders };
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders, acceptedByRider };
 
