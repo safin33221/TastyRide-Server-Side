@@ -33,7 +33,7 @@ const placeOrder = async (req, res) => {
       createdAt: createdAt || Date.now(),
     });
 
-    const savedOrder = await order.save();
+    const savedOrder = await order.save();  
     console.log("Saved Order:", savedOrder); // Log the saved order
 
     res.status(201).send({
