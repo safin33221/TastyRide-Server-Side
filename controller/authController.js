@@ -334,11 +334,18 @@ const getFollowedRestaurant = async (req, res) =>{
   }
 }
 
+// get all restaurant an user is following
+const getAllFollowingRestaurantByUser = async (req, res) => {
+  const {email} = req.params;
+
+}
+
 // follow or unfollow a restaurant
 const followRestaurant = async (req, res) =>{
   const {userEmail, restaurantEmail} = req.body;
   try{
     const restaurant = await User.findOne({email: restaurantEmail});
+    const user = await User.findOne({email: userEmail});
     // console.log(userEmail, restaurantEmail, restaurant);
     if(!restaurant) {
       return res.status(404).json({message: "Restaurant not found"});
@@ -349,10 +356,14 @@ const followRestaurant = async (req, res) =>{
     if(restaurant.restaurantDetails.followers.includes(userEmail)){
       restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
       await restaurant.save();
+      user.followingRestaurant.pull(restaurant._id); //removing restaurant id from the follwing restaurant array
+      await user.save();
       return res.status(200).json({message: "Unfollowed the restaurant successfully", isFollowing: false});
     }else{
       restaurant.restaurantDetails.followers.push(userEmail); //user not following the restaurant and follow it
       await restaurant.save();
+      user.followingRestaurant.push(restaurant._id); //adding restaurant id in the follwing restaurant array
+      await user.save();
       return res.status(200).json({message: "Followed the restaurant successfully", isFollowing: true});
     }
     
