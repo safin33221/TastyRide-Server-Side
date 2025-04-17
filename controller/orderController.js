@@ -29,7 +29,7 @@ const placeOrder = async (req, res) => {
       paymentMethod,
       total_amount,
       status: status || 'Pending',
-      acceptedBy,
+      acceptedBy: "",
       createdAt: createdAt || Date.now(),
     });
 
