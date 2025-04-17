@@ -345,7 +345,7 @@ const getAllFollowingRestaurantByUser = async (req, res) => {
     }
     const restaurants = await User.find({
       _id: { $in: user.followingRestaurant},
-    }).select('email restaurantDetails')
+    }).select('email restaurantDetails.restaurantName restaurantDetails.profilePhoto')
 
     res.status(200).json({isFollowing: true, restaurants});
   } catch (error) {
