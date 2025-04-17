@@ -338,6 +338,20 @@ const getFollowedRestaurant = async (req, res) =>{
 const getAllFollowingRestaurantByUser = async (req, res) => {
   const {email} = req.params;
 
+  try {
+    const user = await User.findOne({email});
+    if(user.followingRestaurant == []){
+      return res.status(404).json({message: "You are not following any restaurants.", isFollowing: false})
+    }
+    const restaurants = await User.find({
+      _id: { $in: user.followingRestaurant},
+    }).select('email restaurantDetails')
+
+    res.status(200).json({isFollowing: true, restaurants});
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+
 }
 
 // follow or unfollow a restaurant
@@ -387,5 +401,6 @@ module.exports = {
   subscribeToNewsletter,
   getSubscribedUser,
   followRestaurant,
-  getFollowedRestaurant
+  getFollowedRestaurant,
+  getAllFollowingRestaurantByUser
 };
