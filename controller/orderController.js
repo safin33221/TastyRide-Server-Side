@@ -99,9 +99,20 @@ const updateOrderStatus = async (req, res) => {
 // update order acceptedBy for rider 
 const acceptedByRider = async (req, res) => {
   const {orderId} = req.params
-  const {status} = req.body
+  const {acceptedBy} = req.body
   try {
-    
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { acceptedBy, createdAt: Date.now() }
+    );
+    if (!order) {
+      return res.status(404).send({ success: false, message: "Order not found" });
+    }
+    res.status(200).send({
+      success: true,
+      message: "Order status updated successfully",
+      data: order,
+    });
   } catch (error) {
     console.error("Error in acceptedByRider:", error);
     res.status(500).send({ success: false, message: "Server Error", error: error.message });
