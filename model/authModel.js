@@ -76,6 +76,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['none', 'pending', 'approved', 'rejected'],
         default: 'none',
+    },
+    followingRestaurant: {
+        type: [String], //array restaurant id
+        default:  [],
     }
 })
 
