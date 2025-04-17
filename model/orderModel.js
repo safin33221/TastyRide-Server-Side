@@ -30,6 +30,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  transaction_id: {
+    type: String
+
+  },
   status: {
     type: String,
     enum: ['Pending', 'Cooking', 'On-the-Way', 'Delivered', 'Cancelled', 'Accepted'],
