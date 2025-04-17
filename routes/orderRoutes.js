@@ -13,6 +13,6 @@ router.get('/orders/:orderId', getOrderById);
 router.get('/orders/user/:email', getUserOrders);
 router.put('/orders/cancel/:orderId', cancelOrder);
 router.get('/allOrders', getAllOrders)
-router.patch("/accepted-rider", acceptedByRider)
+router.patch("/accepted-rider/:orderId", acceptedByRider)
 
 module.exports = router;
