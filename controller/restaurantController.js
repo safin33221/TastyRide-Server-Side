@@ -102,7 +102,7 @@ const updateStatus = async (req, res) => {
     console.log(email, status);
     // 1. Update Restaurant status
     await Restaurant.findOneAndUpdate(quary, { $set: { status } });
-
+    console.log('Restaurant status updated:', status);
     if (status === 'approved') {
       const userdoc = {
         $set: {
