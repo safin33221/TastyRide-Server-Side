@@ -73,20 +73,26 @@ const riderSchema = new mongoose.Schema({
   },
   vehicleType: {
     type: String,
-    enum: ['bike', 'car', 'scooter'],
+    enum: ['bike', 'bicycle', 'scooter'],
     required: true,
   },
   vehicleNumberPlate: {
     type: String,
-    required: true,
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    }
   },
   drivingLicense: {
     type: String,
-    required: true,
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    },
   },
   drivingLicenseImage: {
     type: String,
-    required: true,
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    },
   },
   preferredWorkArea: {
     type: String,
@@ -114,7 +120,7 @@ const riderSchema = new mongoose.Schema({
   },
   mobileWalletProvider: {
     type: String,
-    enum: ['bKash', 'Nagad', 'Rocket', null],
+    enum: ['bKash', 'Nagad', 'Rocket', ''],
     required: function () {
       return this.paymentMethod === 'wallet';
     },
