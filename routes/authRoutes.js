@@ -14,8 +14,7 @@ const {
     subscribeToNewsletter,
     getSubscribedUser,
     followRestaurant,
-    getFollowedRestaurant,
-    getAllFollowingRestaurantByUser
+    getFollowedRestaurant
  } = require('../controller/authController')
 const router = express.Router()
 
@@ -60,8 +59,5 @@ router.patch('/restaurant/follow', followRestaurant);
 
 // get followed restaurant
 router.get('/restaurant/follow', getFollowedRestaurant);
-
-// get restaurant that are following by an user
-router.get('/users/following-restaurants/:email', getAllFollowingRestaurantByUser);
 
 module.exports = router

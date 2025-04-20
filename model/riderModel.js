@@ -1,11 +1,21 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const workAvailabilitySchema = new mongoose.Schema({
-  days: [{
-    type: String,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    required: true,
-  }],
+  days: [
+    {
+      type: String,
+      enum: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      required: true,
+    },
+  ],
   startTime: {
     type: String,
     required: true,
@@ -19,7 +29,7 @@ const workAvailabilitySchema = new mongoose.Schema({
 const riderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
     unique: true,
   },
@@ -63,20 +73,26 @@ const riderSchema = new mongoose.Schema({
   },
   vehicleType: {
     type: String,
-    enum: ['bike', 'car', 'scooter', 'bicycle'],
+    enum: ['bike', 'bicycle', 'scooter'],
     required: true,
   },
   vehicleNumberPlate: {
     type: String,
-    required: true,
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    }
   },
   drivingLicense: {
     type: String,
-    required: true,
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    },
   },
   drivingLicenseImage: {
     type: String,
-   
+    required: function () {
+      return this.vehicleType !== 'bicycle';
+    },
   },
   preferredWorkArea: {
     type: String,
@@ -104,7 +120,7 @@ const riderSchema = new mongoose.Schema({
   },
   mobileWalletProvider: {
     type: String,
-    enum: ['bKash', 'Nagad', 'Rocket', null],
+    enum: ['bKash', 'Nagad', 'Rocket', ''],
     required: function () {
       return this.paymentMethod === 'wallet';
     },
@@ -134,5 +150,5 @@ const riderSchema = new mongoose.Schema({
   },
 });
 
-const Rider = mongoose.model("Rider", riderSchema);
+const Rider = mongoose.model('Rider', riderSchema);
 module.exports = Rider;
