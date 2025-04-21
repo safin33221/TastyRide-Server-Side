@@ -7,7 +7,7 @@ const newNotification = async (req, res) => {
     //     res.status(401).send({ message: 'required all filds' })
     // }
 
-    console.log(data);
+    // console.log(data);
     const newNotification = await new notification(data)
     // console.log(newNotification);
 

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { applyRider, getAllRidersApplications, updateStatus } = require('../controller/riderController')
+const { applyRider, getAllRidersApplications, updateStatus, acceptedByRider } = require('../controller/riderController')
 
 const router = express.Router()
 
@@ -9,5 +9,5 @@ router.post("/rider/application/:userEmail", applyRider);
 
 router.get('/riders-applications', getAllRidersApplications)
 router.patch('/update-applications-status', updateStatus)
-
+router.patch("/accepted-rider/:orderId", acceptedByRider)
 module.exports = router;

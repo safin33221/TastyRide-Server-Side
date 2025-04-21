@@ -6,7 +6,7 @@ const {
     getUser, 
     updateUserRole, 
     deleteUser, 
-    updateResturantProfile, 
+    updateRestaurantProfile, 
     updateUserProfile, 
     logInAttempts, 
     getRestaurantProfile, 
@@ -14,7 +14,8 @@ const {
     subscribeToNewsletter,
     getSubscribedUser,
     followRestaurant,
-    getFollowedRestaurant
+    getFollowedRestaurant,
+    getFollowedRestaurantsByUser
  } = require('../controller/authController')
 const router = express.Router()
 
@@ -40,7 +41,7 @@ router.get('/allRestaurants', allRestaurants)
 // Update user role
 router.put('/users/:id', updateUserRole);
 
-router.patch('/restaruntProfile/:email', updateResturantProfile);
+router.patch('/restaurantProfile/:email', updateRestaurantProfile);
 
 // update user profile
 router.patch('/users/:email', updateUserProfile);
@@ -59,5 +60,8 @@ router.patch('/restaurant/follow', followRestaurant);
 
 // get followed restaurant
 router.get('/restaurant/follow', getFollowedRestaurant);
+
+// get followed restaurant by user
+router.get('/users/following-restaurants/:email', getFollowedRestaurantsByUser);
 
 module.exports = router
