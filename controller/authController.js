@@ -176,36 +176,7 @@ const allRestaurants = async (req, res) => {
   res.status(200).send(restaurants)
 }
 
-//Update Restaurant Profile
-const updateRestaurantProfile = async (req, res) => {
-  const email = req.params.email
 
-  const data = req.body
-
-  const user = await User.findOne({ email })
-
-  //check User
-  if (!user) return res.send({ message: 'user not found' })
-
-  //Check user role>>
-  if (user.role != 'restaurant') return res.send({ message: 'only restaurant can update restaurant details' })
-
-  try {
-
-    //update restaurant Details
-
-    user.restaurantDetails = {
-      ...user.restaurantDetails,
-      ...data
-    }
-
-    await user.save()
-    res.status(200).json({ message: "Restaurant profile updated successfully", user });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
-  }
-
-}
 
 
 const logInAttempts = async (req, res) => {
@@ -399,8 +370,7 @@ module.exports = {
   getUser, 
   updateUserRole, 
   deleteUser, 
-  logInAttempts, 
-  updateRestaurantProfile, 
+  logInAttempts,  
   updateUserProfile, 
   getRestaurantProfile,
   subscribeToNewsletter,

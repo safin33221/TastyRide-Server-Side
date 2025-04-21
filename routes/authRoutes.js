@@ -5,8 +5,7 @@ const {
     getUsers, 
     getUser, 
     updateUserRole, 
-    deleteUser, 
-    updateRestaurantProfile, 
+    deleteUser,  
     updateUserProfile, 
     logInAttempts, 
     getRestaurantProfile, 
@@ -41,7 +40,6 @@ router.get('/allRestaurants', allRestaurants)
 // Update user role
 router.put('/users/:id', updateUserRole);
 
-router.patch('/restaurantProfile/:email', updateRestaurantProfile);
 
 // update user profile
 router.patch('/users/:email', updateUserProfile);

@@ -22,6 +22,10 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  coverPhoto: {
+    type: String,
+    required: false,
+  },
   description: {
     type: String,
     required: true,

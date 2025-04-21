@@ -3,7 +3,8 @@ const {
   applyRestaurant,
   getAllRestaurantsApplications,
   updateStatus,
-  getRestaurantData
+  getRestaurantData,
+  updateRestaurantProfile
 } = require('../controller/restaurantController');
 
 const router = express.Router();
@@ -18,5 +19,8 @@ router.get('/restaurants-applications', getAllRestaurantsApplications);
 router.patch('/update-status', updateStatus);
 
 router.get('/restaurant/:email', getRestaurantData)
+
+
+router.patch('/restaurantProfileUpdate/:email', updateRestaurantProfile);
 
 module.exports = router;

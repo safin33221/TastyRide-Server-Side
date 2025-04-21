@@ -153,9 +153,44 @@ const getRestaurantData = async (req, res) => {
     res.status(500).send(`server Error: ${error}`)
   }
 }
+
+
+const updateRestaurantProfile = async (req, res) => {
+  const { email } = req.params
+
+  const data = req.body
+
+  const user = await User.findOne({ email })
+
+  //check User
+  if (!user) return res.send({ message: 'user not found' })
+  // console.log(user);
+
+  //Check user role>>
+  if (user.role !== 'restaurant') return res.send({ message: 'Not a Restaurant' })
+
+  const restaurant = await Restaurant.findOne({ email })
+  if (!restaurant) {
+    return res.status(404).send({ message: 'Restaurant not found' });
+  }
+  try {
+
+    //update restaurant Details
+
+    Object.assign(restaurant, data);
+
+    await restaurant.save()
+    res.status(200).json({ message: "Restaurant profile updated successfully", restaurant });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+    console.log(error);
+  }
+
+}
 module.exports = {
   getAllRestaurantsApplications,
   updateStatus,
   applyRestaurant,
-  getRestaurantData
+  getRestaurantData,
+  updateRestaurantProfile
 };
