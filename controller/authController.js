@@ -176,8 +176,8 @@ const allRestaurants = async (req, res) => {
   res.status(200).send(restaurants)
 }
 
-//Update Restarunt Profile
-const updateResturantProfile = async (req, res) => {
+//Update Restaurant Profile
+const updateRestaurantProfile = async (req, res) => {
   const email = req.params.email
 
   const data = req.body
@@ -192,7 +192,7 @@ const updateResturantProfile = async (req, res) => {
 
   try {
 
-    //update resturant Details
+    //update restaurant Details
 
     user.restaurantDetails = {
       ...user.restaurantDetails,
@@ -265,12 +265,12 @@ const logInAttempts = async (req, res) => {
 
 }
 
-// subscribe user to newletter
+// subscribe user to newsletter
 const subscribeToNewsletter = async (req, res) => {
   try {
     const {email}  = req.body;
 
-    // valide email
+    // valid email
     if (!email || !email.includes('@')) {
       return res.status(400).json({ message: "Invalid email address" });
     }
@@ -302,7 +302,7 @@ const getSubscribedUser = async (req, res) => {
   try {
     const { email } = req.params;
 
-     // valide email
+     // valid email
      if (!email || !email.includes('@')) {
       return res.status(400).json({ message: "Invalid email address", isSubscribed: false });
     }
@@ -370,7 +370,7 @@ module.exports = {
   updateUserRole, 
   deleteUser, 
   logInAttempts, 
-  updateResturantProfile, 
+  updateRestaurantProfile, 
   updateUserProfile, 
   getRestaurantProfile,
   subscribeToNewsletter,
