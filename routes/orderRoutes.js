@@ -10,8 +10,8 @@ router.delete('/orders/:orderId', deleteOrder);
 router.get('/orders/user/:email', getUserOrders); 
 router.put('/orders/cancel/:orderId', cancelOrder); 
 router.get('/orders/:orderId', getOrderById);
-router.get('/orders/user/:email', getUserOrders);
-router.put('/orders/cancel/:orderId', cancelOrder);
+router.get('/orders/user/:email', getUserOrders)
+router.put('/orders/cancel/:orderId', cancelOrder)
 router.get('/allOrders', getAllOrders)
 
 module.exports = router;

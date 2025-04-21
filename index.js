@@ -53,15 +53,24 @@ const is_live = false; // Set to true for live environment, false for sandbox
 
 // Initialize payment
 app.post('/init-payment', async (req, res) => {
-  const {
+
+  const  {
+    info,
+    cart,
+    restaurantEmail,
+    paymentMethod,
     total_amount,
+    status,
+    createdAt,
+  } = req.body
+  const {
     cus_name,
     cus_email,
     cus_phone,
     cus_country,
     cus_add1,
     cus_city,
-  } = req.body;
+  } = info
 
   // Generate a unique transaction ID (you can use UUID or a custom logic)
   const tran_id = `TRANS_${Date.now()}`;
@@ -83,7 +92,8 @@ app.post('/init-payment', async (req, res) => {
     cus_add1,
     cus_city,
     cus_country,
-    cus_phone, // Customer phone
+    cus_phone,
+    paymentMethod // Customer phone
   };
 
   try {
