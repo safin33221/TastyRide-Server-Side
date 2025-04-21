@@ -78,7 +78,7 @@ const applyRestaurant = async (req, res) => {
 
 //get all riders
 
-const getAllRestaurentsApplications = async (req, res) => {
+const getAllRestaurantsApplications = async (req, res) => {
   try {
     const result = await Restaurant.find();
     res.status(200).send(result);
@@ -137,8 +137,25 @@ const updateStatus = async (req, res) => {
     });
   }
 };
+
+const getRestaurantData = async (req, res) => {
+  try {
+    const { email } = req.params
+    console.log(email);
+    const query = { email }
+    const user = await User.findOne(query)
+    if (user.role !== 'restaurant') {
+      return res.status(201).send({ message: 'Restaurant not Found !!' })
+    }
+    const restaurantData = await Restaurant.findOne(query)
+    res.status(200).send(restaurantData)
+  } catch (error) {
+    res.status(500).send(`server Error: ${error}`)
+  }
+}
 module.exports = {
-  getAllRestaurentsApplications,
+  getAllRestaurantsApplications,
   updateStatus,
   applyRestaurant,
+  getRestaurantData
 };
