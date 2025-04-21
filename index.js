@@ -54,7 +54,7 @@ const is_live = false; // Set to true for live environment, false for sandbox
 // Initialize payment
 app.post('/init-payment', async (req, res) => {
 
-  const orderDetails = {
+  const  {
     info,
     cart,
     restaurantEmail,
@@ -92,7 +92,8 @@ app.post('/init-payment', async (req, res) => {
     cus_add1,
     cus_city,
     cus_country,
-    cus_phone, // Customer phone
+    cus_phone,
+    paymentMethod // Customer phone
   };
 
   try {
