@@ -40,7 +40,7 @@ router.get('/allRestaurants', allRestaurants)
 // Update user role
 router.put('/users/:id', updateUserRole);
 
-router.patch('/restaruntProfile/:email', updateRestaurantProfile);
+router.patch('/restaurantProfile/:email', updateRestaurantProfile);
 
 // update user profile
 router.patch('/users/:email', updateUserProfile);
