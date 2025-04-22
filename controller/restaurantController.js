@@ -201,6 +201,32 @@ const updateRestaurantProfile = async (req, res) => {
 }
 
 
+// get restaurant profile by email
+const getRestaurantProfile = async (req, res) => {
+  try {
+    const email = req.params.email;
+
+
+
+    // find restaurant by email
+    const restaurant = await Restaurant.findOne({ email, status: 'approved' });
+
+    // check if restaurant exists
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+  
+
+    // return restaurant details
+    res.status(200).json(restaurant);
+  }
+  catch (error) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+}
+
+
 
 
 
@@ -210,5 +236,6 @@ module.exports = {
   applyRestaurant,
   getRestaurantData,
   updateRestaurantProfile,
-  allApprovedRestaurant
+  allApprovedRestaurant,
+  getRestaurantProfile
 };
