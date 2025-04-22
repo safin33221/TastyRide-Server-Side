@@ -75,6 +75,10 @@ const restaurantSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  followers: {
+    type: [String], // array of user emails who follow this restaurant
+    default: [],
+  },
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

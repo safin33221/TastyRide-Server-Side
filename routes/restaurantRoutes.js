@@ -6,7 +6,8 @@ const {
   getRestaurantData,
   updateRestaurantProfile,
   allApprovedRestaurant,
-  getRestaurantProfile
+  getRestaurantProfile,
+  followRestaurant
 } = require('../controller/restaurantController');
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.patch('/restaurantProfileUpdate/:email', updateRestaurantProfile);
 
 // get restaurant profile by email
 router.get('/SingleRestaurantProfile/:email', getRestaurantProfile)
+
+// follow or unfollow a restaurant
+router.patch('/restaurant/follow', followRestaurant);
 
 module.exports = router;
