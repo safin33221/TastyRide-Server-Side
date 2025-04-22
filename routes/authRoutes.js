@@ -7,12 +7,10 @@ const {
     updateUserRole, 
     deleteUser,  
     updateUserProfile, 
-    logInAttempts, 
-    getRestaurantProfile, 
+    logInAttempts,
     allRestaurants,
     subscribeToNewsletter,
     getSubscribedUser,
-    followRestaurant,
     getFollowedRestaurant,
     getFollowedRestaurantsByUser
  } = require('../controller/authController')
@@ -30,9 +28,6 @@ router.post('/login', logInAttempts)
 
 //get user role by email
 router.get('/users/:email', getUser)
-
-// get restaurant profile by email
-router.get('/restaurantProfile/:email', getRestaurantProfile)
 
 //get restaurant Profile
 router.get('/allRestaurants', allRestaurants)
@@ -53,8 +48,6 @@ router.patch('/subscribe', subscribeToNewsletter);
 // get the subscribed user
 router.get('/subscribe/:email', getSubscribedUser);
 
-// follow or unfollow a restaurant
-router.patch('/restaurant/follow', followRestaurant);
 
 // get followed restaurant
 router.get('/restaurant/follow', getFollowedRestaurant);
