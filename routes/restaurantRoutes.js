@@ -4,7 +4,8 @@ const {
   getAllRestaurantsApplications,
   updateStatus,
   getRestaurantData,
-  updateRestaurantProfile
+  updateRestaurantProfile,
+  allApprovedRestaurant
 } = require('../controller/restaurantController');
 
 const router = express.Router();
@@ -14,6 +15,9 @@ router.post('/restaurants/application/:userEmail', applyRestaurant);
 
 // Get all applications
 router.get('/restaurants-applications', getAllRestaurantsApplications);
+
+//get Approved Restaurant Data
+router.get('/allApprovedRestaurant',allApprovedRestaurant)
 
 // Update application status
 router.patch('/update-status', updateStatus);

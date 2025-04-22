@@ -76,8 +76,19 @@ const applyRestaurant = async (req, res) => {
   }
 };
 
-//get all riders
+//get all Approved Restaurant Data
 
+const allApprovedRestaurant = async (req, res) => {
+  try {
+    const allApprovedRestaurant = await Restaurant.find({ status: 'approved' })
+    res.status(200).send(allApprovedRestaurant)
+  } catch (error) {
+    res.status(500).send(`sever Error`, error)
+    console.log(error);
+  }
+}
+
+//get all riders
 const getAllRestaurantsApplications = async (req, res) => {
   try {
     const result = await Restaurant.find();
@@ -138,6 +149,7 @@ const updateStatus = async (req, res) => {
   }
 };
 
+//get single restaurant data
 const getRestaurantData = async (req, res) => {
   try {
     const { email } = req.params
@@ -154,7 +166,7 @@ const getRestaurantData = async (req, res) => {
   }
 }
 
-
+//Update Restaurant Data
 const updateRestaurantProfile = async (req, res) => {
   const { email } = req.params
 
@@ -187,10 +199,16 @@ const updateRestaurantProfile = async (req, res) => {
   }
 
 }
+
+
+
+
+
 module.exports = {
   getAllRestaurantsApplications,
   updateStatus,
   applyRestaurant,
   getRestaurantData,
-  updateRestaurantProfile
+  updateRestaurantProfile,
+  allApprovedRestaurant
 };
