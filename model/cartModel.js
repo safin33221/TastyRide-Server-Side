@@ -1,14 +1,15 @@
 const { default: mongoose } = require("mongoose");
 
 const cartSchema = new mongoose.Schema({
-    name:String,
-    price:Number,
-    quantity:Number,
-    image:String,
-    totalPrice:Number,
-    userEmail:String,
+    name: String,
+    price: Number,
+    quantity: Number,
+    image: String,
+    totalPrice: Number,
+    userEmail: String,
     foodOwner: String,
-    foodId:String
+    foodId: String,
+    discount: Number
 })
 
 const Cart = mongoose.model("cart", cartSchema)
