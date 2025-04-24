@@ -59,7 +59,7 @@ const handleQuantity = async (req, res) => {
   console.log(status, foodId, email);
 
   const cartItem = await Cart.findOne({ foodId, userEmail: email })
-  console.log(cartItem);
+
   if (!cartItem) {
     return res.status(201).send({ message: "Foods Not found!" })
 
@@ -81,10 +81,26 @@ const handleQuantity = async (req, res) => {
   // Update the total price
   cartItem.totalPrice = cartItem.price * cartItem.quantity;
 
+  // // Apply discount based on total price
+
+  // if (cartItem.totalPrice > 500) {
+  //   cartItem.discount = cartItem.totalPrice * 0.05; // 5% discount
+  // } else if (cartItem.totalPrice >= 1000) {
+  //   cartItem.discount = cartItem.totalPrice * 0.10; // 10% discount
+  // } else if (cartItem.totalPrice >= 1000) {
+  //   cartItem.discount = cartItem.totalPrice * 0.20; // 10% discount
+  // }
+
+  // cartItem.totalPrice -= cartItem.discount; 
+
   // Save the updated cart item
   await cartItem.save();
 
-  res.status(200).send({ message: "Cart item updated", data: cartItem });
+  res.status(200).send({
+    message: "Cart item updated",
+    data: cartItem,
+  
+  });
 }
 const clearCart = async (req, res) => {
   const { email } = req.params
