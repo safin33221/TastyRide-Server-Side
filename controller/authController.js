@@ -176,36 +176,7 @@ const allRestaurants = async (req, res) => {
   res.status(200).send(restaurants)
 }
 
-//Update Restaurant Profile
-const updateRestaurantProfile = async (req, res) => {
-  const email = req.params.email
 
-  const data = req.body
-
-  const user = await User.findOne({ email })
-
-  //check User
-  if (!user) return res.send({ message: 'user not found' })
-
-  //Check user role>>
-  if (user.role != 'restaurant') return res.send({ message: 'only restaurant can update restaurant details' })
-
-  try {
-
-    //update restaurant Details
-
-    user.restaurantDetails = {
-      ...user.restaurantDetails,
-      ...data
-    }
-
-    await user.save()
-    res.status(200).json({ message: "Restaurant profile updated successfully", user });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
-  }
-
-}
 
 
 const logInAttempts = async (req, res) => {
@@ -334,40 +305,7 @@ const getFollowedRestaurant = async (req, res) =>{
   }
 }
 
-// follow or unfollow a restaurant
-const followRestaurant = async (req, res) =>{
-  const {userEmail, restaurantEmail} = req.body;
-  try{
-    const restaurant = await User.findOne({email: restaurantEmail});
-    // console.log(userEmail, restaurantEmail, restaurant);
-    const user = await User.findOne({email: userEmail});
-    // console.log(user);
-    
 
-    if(!restaurant) {
-      return res.status(404).json({message: "Restaurant not found"});
-    }
-    if(!restaurant.restaurantDetails) {
-      return res.status(404).json({message: "Restaurant profile does not set up yet, so can't follow it"});
-    }
-    if(restaurant.restaurantDetails.followers.includes(userEmail)){
-      restaurant.restaurantDetails.followers.pull(userEmail); //user already following the restaurant and unfollow it
-      await restaurant.save();
-      user.followingRestaurant.pull(restaurant._id); // remove restaurant from user's following list
-      await user.save();
-      return res.status(200).json({message: "Unfollowed the restaurant successfully", isFollowing: false});
-    }else{
-      restaurant.restaurantDetails.followers.push(userEmail); //user not following the restaurant and follow it
-      await restaurant.save();
-      user.followingRestaurant.push(restaurant._id); // add restaurant to user's following list
-      await user.save();  
-      return res.status(200).json({message: "Followed the restaurant successfully", isFollowing: true});
-    }
-    
-  }catch(error){
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-}
 
 // get all followed restaurants by user
 const getFollowedRestaurantsByUser = async (req, res) => {
@@ -399,13 +337,11 @@ module.exports = {
   getUser, 
   updateUserRole, 
   deleteUser, 
-  logInAttempts, 
-  updateRestaurantProfile, 
+  logInAttempts,  
   updateUserProfile, 
   getRestaurantProfile,
   subscribeToNewsletter,
   getSubscribedUser,
-  followRestaurant,
   getFollowedRestaurant,
   getFollowedRestaurantsByUser
 };

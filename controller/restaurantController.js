@@ -11,6 +11,8 @@ const applyRestaurant = async (req, res) => {
       businessName,
       type,
       description,
+      city,
+      district,
       address,
       pickup,
       mapPin,
@@ -37,6 +39,8 @@ const applyRestaurant = async (req, res) => {
       businessName,
       type,
       description,
+      city,
+      district,
       address,
       pickup,
       mapPin,
@@ -76,9 +80,20 @@ const applyRestaurant = async (req, res) => {
   }
 };
 
-//get all riders
+//get all Approved Restaurant Data
 
-const getAllRestaurentsApplications = async (req, res) => {
+const allApprovedRestaurant = async (req, res) => {
+  try {
+    const allApprovedRestaurant = await Restaurant.find({ status: 'approved' });
+    res.status(200).send(allApprovedRestaurant);
+  } catch (error) {
+    res.status(500).send(`sever Error`, error);
+    console.log(error);
+  }
+};
+
+//get all riders
+const getAllRestaurantsApplications = async (req, res) => {
   try {
     const result = await Restaurant.find();
     res.status(200).send(result);
@@ -137,8 +152,123 @@ const updateStatus = async (req, res) => {
     });
   }
 };
+
+//get single restaurant data
+const getRestaurantData = async (req, res) => {
+  try {
+    const { email } = req.params;
+    console.log(email);
+    const query = { email };
+    const user = await User.findOne(query);
+    if (user.role !== 'restaurant') {
+      return res.status(201).send({ message: 'Restaurant not Found !!' });
+    }
+    const restaurantData = await Restaurant.findOne(query);
+    res.status(200).send(restaurantData);
+  } catch (error) {
+    res.status(500).send(`server Error: ${error}`);
+  }
+};
+
+//Update Restaurant Data
+const updateRestaurantProfile = async (req, res) => {
+  const { email } = req.params;
+
+  const data = req.body;
+
+  const user = await User.findOne({ email });
+
+  //check User
+  if (!user) return res.send({ message: 'user not found' });
+  // console.log(user);
+
+  //Check user role>>
+  if (user.role !== 'restaurant')
+    return res.send({ message: 'Not a Restaurant' });
+
+  const restaurant = await Restaurant.findOne({ email });
+  if (!restaurant) {
+    return res.status(404).send({ message: 'Restaurant not found' });
+  }
+  try {
+    //update restaurant Details
+
+    Object.assign(restaurant, data);
+
+    await restaurant.save();
+    res
+      .status(200)
+      .json({ message: 'Restaurant profile updated successfully', restaurant });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error: error.message });
+    console.log(error);
+  }
+};
+
+// get restaurant profile by email
+const getRestaurantProfile = async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    // find restaurant by email
+    const restaurant = await Restaurant.findOne({ email, status: 'approved' });
+
+    // check if restaurant exists
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    // return restaurant details
+    res.status(200).json(restaurant);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
+// follow or unfollow a restaurant
+const followRestaurant = async (req, res) => {
+  const { userEmail, restaurantEmail } = req.body;
+  try {
+    const restaurant = await Restaurant.findOne({ email: restaurantEmail });
+    // console.log(userEmail, restaurantEmail, restaurant);
+    const user = await User.findOne({ email: userEmail });
+    // console.log(user);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+
+    if (restaurant.followers.includes(userEmail)) {
+      restaurant.followers.pull(userEmail); //user already following the restaurant and unfollow it
+      await restaurant.save();
+      user.followingRestaurant.pull(restaurant._id); // remove restaurant from user's following list
+      await user.save();
+      return res.status(200).json({
+        message: 'Unfollowed the restaurant successfully',
+        isFollowing: false,
+      });
+    } else {
+      restaurant.followers.push(userEmail); //user not following the restaurant and follow it
+      await restaurant.save();
+      user.followingRestaurant.push(restaurant._id); // add restaurant to user's following list
+      await user.save();
+      return res.status(200).json({
+        message: 'Followed the restaurant successfully',
+        isFollowing: true,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
-  getAllRestaurentsApplications,
+  getAllRestaurantsApplications,
   updateStatus,
   applyRestaurant,
+  getRestaurantData,
+  updateRestaurantProfile,
+  allApprovedRestaurant,
+  getRestaurantProfile,
+  followRestaurant,
 };
