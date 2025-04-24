@@ -1,9 +1,3 @@
-
-
-
-
-
-
 const Order = require('../model/orderModel');
 
 
@@ -73,9 +67,10 @@ const getSellerOrders = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
+  console.log(status);
 
   try {
-    const validStatuses = ['Pending', 'Cooking', 'On the Way', 'Delivered'];
+    const validStatuses = ['Pending', 'Cooking', 'On-the-Way', 'Delivered', 'Cancelled', 'Accepted'];
     if (!validStatuses.includes(status)) {
       return res.status(400).send({ success: false, message: "Invalid status" });
     }

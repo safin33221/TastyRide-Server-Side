@@ -1,6 +1,8 @@
+const mongoose = require('mongoose')
 const User = require("./../model/authModel");
 const Rider = require('./../model/riderModel')
-
+const ObjectId = mongoose.Types.ObjectId;
+const Order = require('./../model/orderModel')
 // apply for rider
 const applyRider = async (req, res) => {
   try {
@@ -112,17 +114,39 @@ const getAllRidersApplications = async (req, res) => {
 
 const updateStatus = async (req, res) => {
   try {
-    const { userId, status } = req.body
-    const query = { userId}
-    console.log(query);
+    const { email, status } = req.body
+    console.log(email, status);
+    const query = { email }
     const updateDoc = {
       $set: {
         status: status
       }
     }
-    const result = await Rider.updateOne(query, updateDoc)
-    console.log(result);
-    res.status(200).send({ message: "update successfully", result })
+    const result = await Rider.findOneAndUpdate(query, updateDoc)
+    if (status === 'approved') {
+      const query = { email }
+      const UserDoc = {
+        $set: {
+          role: 'rider',
+          riderStatus: 'approved'
+        }
+      }
+      console.log(email);
+      await User.findOneAndUpdate(query, UserDoc)
+      console.log(user);
+    } else {
+      const query = { email }
+      const UserDoc = {
+        $set: {
+          riderStatus: 'rejected'
+        }
+      }
+      console.log(email);
+      await User.findOneAndUpdate(query, UserDoc)
+      res.status(200).send({ message: 'rejected' })
+    }
+
+    res.status(200).send({ message: "update successfully", result: result })
   } catch (error) {
     res.status(500).send({ message: "server error" })
   }
@@ -130,8 +154,33 @@ const updateStatus = async (req, res) => {
 
 }
 
+
+// update order acceptedBy for rider 
+const acceptedByRider = async (req, res) => {
+  const {orderId} = req.params
+  const {acceptedBy} = req.body
+  try {
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      { acceptedBy, createdAt: Date.now() }
+    );
+    if (!order) {
+      return res.status(404).send({ success: false, message: "Order not found" });
+    }
+    res.status(200).send({
+      success: true,
+      message: "Order status updated successfully",
+      data: order,
+    });
+  } catch (error) {
+    console.error("Error in acceptedByRider:", error);
+    res.status(500).send({ success: false, message: "Server Error", error: error.message });
+  }
+}
+
 module.exports = {
   applyRider,
   getAllRidersApplications,
-  updateStatus
+  updateStatus,
+  acceptedByRider
 };

@@ -1,10 +1,9 @@
-const express = require("express");
-require("dotenv").config();
-const cors = require("cors");
-const connectDB = require("./utils/db");
-const SSLCommerzPayment = require("sslcommerz-lts");
-const jwt = require('jsonwebtoken')
-
+const express = require('express');
+require('dotenv').config();
+const cors = require('cors');
+const connectDB = require('./utils/db');
+const SSLCommerzPayment = require('sslcommerz-lts');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -17,7 +16,8 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const notification = require('./routes/notification');
 const reviewRoutes = require('./routes/reviewRoutes');
-const riderRoutes = require('./routes/riderRoute')
+const riderRoutes = require('./routes/riderRoute');
+const restaurantRoutes = require('./routes/restaurantRoutes');
 
 // Middleware
 app.use(cors());
@@ -27,9 +27,11 @@ app.use(express.urlencoded({ extended: true })); // Parse POST data from SSLComm
 //Create json web Token
 app.post('/jwt', async (req, res) => {
   const userinfo = req.body;
-  const token = jwt.sign(userinfo, process.env.JSON_SECRET_KEY, { expiresIn: '23h' })
-  res.send(token)
-})
+  const token = jwt.sign(userinfo, process.env.JSON_SECRET_KEY, {
+    expiresIn: '23h',
+  });
+  res.send(token);
+});
 
 // Mongoose
 connectDB();
@@ -41,7 +43,8 @@ app.use('/api', cartRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', notification);
 app.use('/api', reviewRoutes);
-app.use('/api', riderRoutes)
+app.use('/api', riderRoutes);
+app.use('/api', restaurantRoutes);
 
 // SSLCommerz configuration
 const store_id = process.env.STORE_ID; // Your Store ID from SSLCommerz
@@ -50,15 +53,24 @@ const is_live = false; // Set to true for live environment, false for sandbox
 
 // Initialize payment
 app.post('/init-payment', async (req, res) => {
-  const {
+
+  const  {
+    info,
+    cart,
+    restaurantEmail,
+    paymentMethod,
     total_amount,
+    status,
+    createdAt,
+  } = req.body
+  const {
     cus_name,
     cus_email,
     cus_phone,
     cus_country,
     cus_add1,
     cus_city,
-  } = req.body;
+  } = info
 
   // Generate a unique transaction ID (you can use UUID or a custom logic)
   const tran_id = `TRANS_${Date.now()}`;
@@ -80,7 +92,8 @@ app.post('/init-payment', async (req, res) => {
     cus_add1,
     cus_city,
     cus_country,
-    cus_phone, // Customer phone
+    cus_phone,
+    paymentMethod // Customer phone
   };
 
   try {
