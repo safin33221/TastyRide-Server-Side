@@ -175,7 +175,7 @@ const getOrderById = async (req, res) => {
   const { userEmail } = req.query;
 
   try {
-    console.log("Fetching order:", orderId, "for user:", userEmail); // Log the fetch attempt
+    // console.log("Fetching order:", orderId, "for user:", userEmail); // Log the fetch attempt
     const order = await Order.findById(orderId);
 
     if (!order) {

@@ -1,3 +1,4 @@
+
 const express = require('express');
 const {
   applyRestaurant,
@@ -6,8 +7,10 @@ const {
   getRestaurantData,
   updateRestaurantProfile,
   allApprovedRestaurant,
+  getApprovedRestaurantsFlat,
   getRestaurantProfile,
-  followRestaurant
+  followRestaurant,
+  getRestaurantsByCity,
 } = require('../controller/restaurantController');
 
 const router = express.Router();
@@ -18,22 +21,28 @@ router.post('/restaurants/application/:userEmail', applyRestaurant);
 // Get all applications
 router.get('/restaurants-applications', getAllRestaurantsApplications);
 
-//get Approved Restaurant Data
-router.get('/allApprovedRestaurant', allApprovedRestaurant)
+// Get approved restaurants grouped by city
+router.get('/allApprovedRestaurant', allApprovedRestaurant);
+
+// Get approved restaurants as a flat list
+router.get('/approvedRestaurants', getApprovedRestaurantsFlat);
+
+// Get restaurants by city
+router.get('/restaurants/city/:cityName', getRestaurantsByCity);
 
 // Update application status
 router.patch('/update-status', updateStatus);
 
-//get Single Restaurant
-router.get('/restaurant/:email', getRestaurantData)
+// Get single restaurant
+router.get('/restaurant/:email', getRestaurantData);
 
-//Update Restaurant Data 
+// Update restaurant data
 router.patch('/restaurantProfileUpdate/:email', updateRestaurantProfile);
 
-// get restaurant profile by email
-router.get('/SingleRestaurantProfile/:email', getRestaurantProfile)
+// Get restaurant profile by email
+router.get('/SingleRestaurantProfile/:email', getRestaurantProfile);
 
-// follow or unfollow a restaurant
+// Follow or unfollow a restaurant
 router.patch('/restaurant/follow', followRestaurant);
 
 module.exports = router;
