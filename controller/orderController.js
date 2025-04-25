@@ -199,8 +199,9 @@ const getOrderOverview = async (req, res) => {
   try {
     const restaurantEmail = req.params.email;
     const thisMonth = moment().subtract(30, 'days').toDate();
-    // const thisWeek = moment().subtract(7, 'days').toDate();
-    // const today = moment().startOf('day').toDate();
+    const oneWeek = moment().subtract(7, 'days').toDate();
+    const selectedDay = req.query.date ? moment(req.query.date).startOf('day').toDate() : moment().startOf('day').toDate();
+    const oneDay = moment(selectedDay).add(1, 'day').toDate();
 
   // get total orders of a restaurant
   const totalOrders = await Order.countDocuments({ restaurantEmail });
@@ -263,6 +264,62 @@ const getOrderOverview = async (req, res) => {
     }
   ])
 
+  // order over last 7 days
+  const orderOverOneWeek = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: oneWeek},
+      
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%d-%m-%Y", date: "$createdAt" },
+        },
+        count: {$sum: 1},
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
+  // order in one day
+  const orderOverOneDay = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: selectedDay, $lt: oneDay},
+      }
+    },
+    {
+      $group: {
+        _id: {
+          $hour: "$createdAt",
+        },
+        count: {$sum: 1}, 
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
+  // order status distribution
+  const statusDistribution = await Order.aggregate([
+    {
+      $match: {restaurantEmail},
+    },
+    {
+      $group: {
+        _id: '$status',
+        count: { $sum: 1},
+      }
+    }
+  ])
+
   res.status(200).send({
     metrics: {
       totalOrders,
@@ -271,9 +328,21 @@ const getOrderOverview = async (req, res) => {
       deliveredOrders,
       cancelledOrders
     },
-    chart: {
+    charts: {
       orderOverOneMonth: orderOverOneMonth.map( items => ({
-        data: items._id,
+        date: items._id,
+        count: items.count,
+      })),
+      orderOverOneWeek: orderOverOneWeek.map( items => ({
+        date: items._id,
+        count: items.count
+      })),
+      orderOverOneDay: orderOverOneDay.map(items =>({
+        hour: items._id,
+        count: items.count,
+      })),
+      statusDistribution: statusDistribution.map(items => ({
+        status: items._id,
         count: items.count,
       }))
     }
