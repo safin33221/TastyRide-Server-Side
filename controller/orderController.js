@@ -1,5 +1,5 @@
 const Order = require('../model/orderModel');
-
+const moment = require('moment');
 
 const getAllOrders = async (req, res) => {
   try {
@@ -198,6 +198,9 @@ const getOrderById = async (req, res) => {
 const getOrderOverview = async (req, res) => {
   try {
     const restaurantEmail = req.params.email;
+    const thisMonth = moment().subtract(30, 'days').toDate();
+    // const thisWeek = moment().subtract(7, 'days').toDate();
+    // const today = moment().startOf('day').toDate();
 
   // get total orders of a restaurant
   const totalOrders = await Order.countDocuments({ restaurantEmail });
@@ -241,6 +244,25 @@ const getOrderOverview = async (req, res) => {
     }
   )
 
+  // order over last 30 days
+  const orderOverOneMonth = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: thisMonth},
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        count: { $sum: 1},
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
   res.status(200).send({
     metrics: {
       totalOrders,
@@ -248,6 +270,12 @@ const getOrderOverview = async (req, res) => {
       activeOrders,
       deliveredOrders,
       cancelledOrders
+    },
+    chart: {
+      orderOverOneMonth: orderOverOneMonth.map( items => ({
+        data: items._id,
+        count: items.count,
+      }))
     }
   })
   }
