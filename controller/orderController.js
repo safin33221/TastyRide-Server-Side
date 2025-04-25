@@ -194,5 +194,67 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders };
+// get order overview of a restaurant
+const getOrderOverview = async (req, res) => {
+  try {
+    const restaurantEmail = req.params.email;
+
+  // get total orders of a restaurant
+  const totalOrders = await Order.countDocuments({ restaurantEmail });
+
+  // get total revenue of a restaurant
+  const revenueResult = await Order.aggregate([
+    {
+      $match: { restaurantEmail },
+    },
+    {
+      $group: {
+        _id: null,
+        totalRevenue: {$sum: "$total_amount"},
+      }
+    }
+  ])
+  const totalRevenue =  revenueResult[0].totalRevenue || 0;
+
+  // get total active orders of the restaurant
+  const activeOrders = await Order.countDocuments(
+    {restaurantEmail,
+      status: {
+        $in: ['Pending', 'Cooking', 'On-the-Way', 'Accepted'],
+      }
+    }
+  )
+
+  // get successfully delivered orders of the restaurant
+  const deliveredOrders = await Order.countDocuments(
+    {
+      restaurantEmail,
+      status: 'Delivered',
+    }
+  )
+
+  // get total cancelled orders of the restaurant
+  const cancelledOrders = await Order.countDocuments(
+    {
+      restaurantEmail,
+      status: 'Cancelled',
+    }
+  )
+
+  res.status(200).send({
+    metrics: {
+      totalOrders,
+      totalRevenue,
+      activeOrders,
+      deliveredOrders,
+      cancelledOrders
+    }
+  })
+  }
+  catch (error) {
+    res.status(500).send({ success: false, message: "Server Error", error: error.message });
+  }
+}
+
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders, getOrderOverview };
 
