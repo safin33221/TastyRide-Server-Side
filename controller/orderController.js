@@ -1,5 +1,5 @@
 const Order = require('../model/orderModel');
-
+const moment = require('moment');
 
 const getAllOrders = async (req, res) => {
   try {
@@ -194,5 +194,165 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders };
+// get order overview of a restaurant
+const getOrderOverview = async (req, res) => {
+  try {
+    const restaurantEmail = req.params.email;
+    const thisMonth = moment().subtract(30, 'days').toDate();
+    const oneWeek = moment().subtract(7, 'days').toDate();
+    const selectedDay = req.query.date ? moment(req.query.date).startOf('day').toDate() : moment().startOf('day').toDate();
+    const oneDay = moment(selectedDay).add(1, 'day').toDate();
+    // console.log(selectedDay, oneDay)
+  // get total orders of a restaurant
+  const totalOrders = await Order.countDocuments({ restaurantEmail });
+
+  // get total revenue of a restaurant
+  const revenueResult = await Order.aggregate([
+    {
+      $match: { restaurantEmail },
+    },
+    {
+      $group: {
+        _id: null,
+        totalRevenue: {$sum: "$total_amount"},
+      }
+    }
+  ])
+  const totalRevenue =  revenueResult[0]?.totalRevenue || 0;
+
+  // get total active orders of the restaurant
+  const activeOrders = await Order.countDocuments(
+    {restaurantEmail,
+      status: {
+        $in: ['Pending', 'Cooking', 'On-the-Way', 'Accepted'],
+      }
+    }
+  )
+
+  // get successfully delivered orders of the restaurant
+  const deliveredOrders = await Order.countDocuments(
+    {
+      restaurantEmail,
+      status: 'Delivered',
+    }
+  )
+
+  // get total cancelled orders of the restaurant
+  const cancelledOrders = await Order.countDocuments(
+    {
+      restaurantEmail,
+      status: 'Cancelled',
+    }
+  )
+
+  // order over last 30 days
+  const orderOverOneMonth = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: thisMonth},
+      },
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        count: { $sum: 1},
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
+  // order over last 7 days
+  const orderOverOneWeek = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: oneWeek},
+      
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: "%d-%m-%Y", date: "$createdAt" },
+        },
+        count: {$sum: 1},
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
+  // order in one day
+  const orderOverOneDay = await Order.aggregate([
+    {
+      $match: {
+        restaurantEmail,
+        createdAt: { $gte: selectedDay, $lt: oneDay},
+      }
+    },
+    {
+      $group: {
+        _id: {
+          $hour: "$createdAt",
+        },
+        count: {$sum: 1}, 
+      }
+    },
+    {
+      $sort: {_id: 1},
+    }
+  ])
+
+  // order status distribution
+  const statusDistribution = await Order.aggregate([
+    {
+      $match: {restaurantEmail},
+    },
+    {
+      $group: {
+        _id: '$status',
+        count: { $sum: 1},
+      }
+    }
+  ])
+
+  res.status(200).send({
+    metrics: {
+      totalOrders,
+      totalRevenue,
+      activeOrders,
+      deliveredOrders,
+      cancelledOrders
+    },
+    charts: {
+      orderOverOneMonth: orderOverOneMonth.map( items => ({
+        date: items._id,
+        count: items.count,
+      })),
+      orderOverOneWeek: orderOverOneWeek.map( items => ({
+        date: items._id,
+        count: items.count
+      })),
+      orderOverOneDay: orderOverOneDay.map(items =>({
+        hour: items._id,
+        count: items.count,
+      })),
+      statusDistribution: statusDistribution.map(items => ({
+        status: items._id,
+        count: items.count,
+      }))
+    }
+  })
+  }
+  catch (error) {
+    console.log(error.message)
+    res.status(500).send({ success: false, message: "Server Error", error: error.message });
+  }
+}
+
+module.exports = { placeOrder, getSellerOrders, updateOrderStatus, deleteOrder, getUserOrders, cancelOrder, getOrderById, getAllOrders, getOrderOverview };
 
