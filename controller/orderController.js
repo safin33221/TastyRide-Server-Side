@@ -202,7 +202,7 @@ const getOrderOverview = async (req, res) => {
     const oneWeek = moment().subtract(7, 'days').toDate();
     const selectedDay = req.query.date ? moment(req.query.date).startOf('day').toDate() : moment().startOf('day').toDate();
     const oneDay = moment(selectedDay).add(1, 'day').toDate();
-
+    // console.log(selectedDay, oneDay)
   // get total orders of a restaurant
   const totalOrders = await Order.countDocuments({ restaurantEmail });
 
@@ -218,7 +218,7 @@ const getOrderOverview = async (req, res) => {
       }
     }
   ])
-  const totalRevenue =  revenueResult[0].totalRevenue || 0;
+  const totalRevenue =  revenueResult[0]?.totalRevenue || 0;
 
   // get total active orders of the restaurant
   const activeOrders = await Order.countDocuments(
@@ -349,6 +349,7 @@ const getOrderOverview = async (req, res) => {
   })
   }
   catch (error) {
+    console.log(error.message)
     res.status(500).send({ success: false, message: "Server Error", error: error.message });
   }
 }

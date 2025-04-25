@@ -1,4 +1,5 @@
 const User = require("../model/authModel");
+const Restaurant = require("../model/restaurantModal");
 const bcrypt = require('bcrypt')
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME = 0.1 * 60 * 1000; // 15 minutes
@@ -314,9 +315,9 @@ const getFollowedRestaurantsByUser = async (req, res) => {
     const user= await User.findOne({email}).select('followingRestaurant')
     // console.log(user);
     
-    const restaurants = await User.find({
+    const restaurants = await Restaurant.find({
       _id: { $in: user.followingRestaurant }
-    }).select('_id email restaurantDetails');
+    }).select('_id email logo businessName');
     // console.log(restaurants);
     if(!restaurants || restaurants.length === 0) {
       return res.status(404).json({ message: "You are not following any restaurants", isFollowing: false });
