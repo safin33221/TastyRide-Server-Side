@@ -1,6 +1,7 @@
 const { get } = require("mongoose");
 const Food = require("./../model/foodModel");
 const User = require("./../model/authModel");
+const Restaurant = require("./../model/restaurantModal");
 
 const addFood = async (req, res) => {
   const {
@@ -87,24 +88,27 @@ const getSingleFood = async (req, res) => {
     }
 
     // find restaurant profile
-    const restaurant = await User.findOne({ email: food.addedBy, role: "restaurant" })
-    .select("restaurantDetails")
-    .lean()
+    const restaurant = await Restaurant.findOne({ email: food.addedBy })
+      .lean()
 
-    if(!restaurant || !restaurant.restaurantDetails) {
+
+    if (!restaurant) {
       return res.status(200).json({ food, message: "Restaurant not found" });
     }
 
-    res.status(200).send({food, 
-      restaurantName: restaurant.restaurantDetails.restaurantName, 
-      restaurantProfile: restaurant.restaurantDetails.profilePhoto});
+    res.status(200).send({
+      food,
+      restaurantName: restaurant.businessName,
+      restaurantProfile: restaurant.logo
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 
 const getFoodByEmail = async (req, res) => {
-  const  email  = req.params.email // Email passed as query parameter
+  const email = req.params.email // Email passed as query parameter
 
   try {
     if (!email) {

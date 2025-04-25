@@ -21,7 +21,8 @@ const adSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true
-    }
+    },
+    
 })
 
 const Ad = mongoose.model("Ad", adSchema)

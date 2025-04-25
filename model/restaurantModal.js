@@ -22,7 +22,19 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  coverPhoto: {
+    type: String,
+    required: false,
+  },
   description: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  district: {
     type: String,
     required: true,
   },
@@ -70,6 +82,10 @@ const restaurantSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  followers: {
+    type: [String], // array of user emails who follow this restaurant
+    default: [],
   },
 });
 
