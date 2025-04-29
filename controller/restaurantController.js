@@ -20,7 +20,8 @@ const cityImages = {
   Tangail: "https://i.ibb.co.com/SwN5pZhn/Tangail.jpg",
   Barisal: "https://i.ibb.co.com/yB70Dj52/barisal.jpg",
   Gazipur: "https://i.ibb.co.com/Lz1qZXTj/Gazipur.webp",
-  "Cox's Bazar": "https://i.ibb.co.com/4RccVFdV/Cox-s-Bazar.jpg",
+  CoxsBazar: "https://i.ibb.co.com/4RccVFdV/Cox-s-Bazar.jpg",
+  Rangpur: "https://i.ibb.co.com/Z1LcnJ0G/rangpur.jpg",
 };
 
 // Apply for restaurant
