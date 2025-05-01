@@ -32,13 +32,21 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Cooking', 'On-the-Way', 'Delivered', 'Cancelled', 'Accepted'],
-    default: 'Pending',
+    enum: [
+      "Pending",
+      "Cooking",
+      "On-the-Way",
+      "Delivered",
+      "Cancelled",
+      "Accepted",
+    ],
+    default: "Pending",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  acceptedBy: String,
 });
 
 module.exports = mongoose.model('Order', orderSchema);
