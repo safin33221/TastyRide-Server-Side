@@ -151,11 +151,11 @@ const getApprovedRestaurantsFlat = async (req, res) => {
 const getRestaurantsByCity = async (req, res) => {
   try {
     const { cityName } = req.params;
-    const restaurants = await Restaurant.find({ 
+    const restaurants = await Restaurant.find({
       city: new RegExp(`^${cityName}$`, 'i'), // Case-insensitive match
-      status: 'approved' 
+      status: 'approved'
     });
-    
+
     if (!restaurants.length) {
       return res.status(404).json({
         success: false,
@@ -190,20 +190,20 @@ const updateStatus = async (req, res) => {
     const query = { email };
     await Restaurant.findOneAndUpdate(query, { $set: { status } });
     if (status === 'approved') {
-      const userdoc = {
+      const userDoc = {
         $set: {
           restaurantStatus: status,
           role: 'restaurant',
         },
       };
-      await User.findOneAndUpdate(query, userdoc);
+      await User.findOneAndUpdate(query, userDoc);
     } else {
-      const userdoc = {
+      const userDoc = {
         $set: {
           restaurantStatus: status,
         },
       };
-      await User.findOneAndUpdate(query, userdoc);
+      await User.findOneAndUpdate(query, userDoc);
     }
 
     res.status(200).json({
@@ -317,6 +317,39 @@ const followRestaurant = async (req, res) => {
   }
 };
 
+const getRestaurantByLocation = async (req, res) => {
+  try {
+    const { location } = req.params;
+
+    // Search for restaurants where city, district, or address matches the location
+    const restaurants = await Restaurant.find({
+      $or: [
+        { city: new RegExp(location, 'i') }, // Case-insensitive match for city
+        { district: new RegExp(location, 'i') }, // Case-insensitive match for district
+        { address: new RegExp(location, 'i') } // Case-insensitive match for address
+      ],
+      status: 'approved' // Only approved restaurants
+    });
+
+    if (!restaurants.length) {
+      return res.status(404).json({
+        success: false,
+        message: `No restaurants found for location: ${location}`,
+      });
+    }
+
+    res.status(200).send(restaurants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message,
+    });
+      }
+};
+
+
 module.exports = {
   applyRestaurant,
   getAllRestaurantsApplications,
@@ -328,4 +361,5 @@ module.exports = {
   updateRestaurantProfile,
   getRestaurantProfile,
   followRestaurant,
+  getRestaurantByLocation
 };
