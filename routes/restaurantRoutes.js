@@ -11,6 +11,7 @@ const {
   getRestaurantProfile,
   followRestaurant,
   getRestaurantsByCity,
+  getRestaurantByLocation
 } = require('../controller/restaurantController');
 
 const router = express.Router();
@@ -29,6 +30,10 @@ router.get('/approvedRestaurants', getApprovedRestaurantsFlat);
 
 // Get restaurants by city
 router.get('/restaurants/city/:cityName', getRestaurantsByCity);
+
+//get Restaurant by  location
+
+router.get('/location/restaurant/:location', getRestaurantByLocation)
 
 // Update application status
 router.patch('/update-status', updateStatus);
