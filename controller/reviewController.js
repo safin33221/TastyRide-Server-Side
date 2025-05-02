@@ -53,4 +53,35 @@ const getAllReviews = async (req, res) => {
     });
   }
 };
-module.exports = { submitReview, getAllReviews }
+
+
+const getReviewById = async (req, res) => {
+  try {
+    const { id: orderId } = req.params; // Extract orderId from params
+    console.log('Order ID:', orderId);
+
+    // Find the review by orderId
+    const review = await Review.findOne({ orderId });
+
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: 'Review not found for the given order ID',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Review fetched successfully',
+      data: review,
+    });
+  } catch (error) {
+    console.error('Error in getReviewById:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message,
+    });
+  }
+};
+module.exports = { submitReview, getAllReviews, getReviewById }
