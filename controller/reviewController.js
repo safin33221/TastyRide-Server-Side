@@ -2,10 +2,10 @@ const Review = require('../model/reviewModel');
 
 const submitReview = async (req, res) => {
   try {
-    const { userId, rating, review } = req.body;
+    const { userId, rating, review, userPhoto, restaurantEmail, orderId } = req.body;
 
     // Validate input
-    if (!userId || !rating || !review) {
+    if (!userId || !rating || !review || !restaurantEmail || !userPhoto || !orderId) {
       return res.status(400).json({
         success: false,
         message: 'Missing required fields',
@@ -16,6 +16,9 @@ const submitReview = async (req, res) => {
       userId,
       rating,
       review,
+      userPhoto,
+      restaurantEmail,
+      orderId
     });
 
     res.status(201).json({
@@ -33,7 +36,7 @@ const submitReview = async (req, res) => {
 };
 
 // GET /api/reviews - Get all reviews with pagination
- const getAllReviews = async (req, res) => {
+const getAllReviews = async (req, res) => {
   try {
     const reviews = await Review.find();
     res.status(200).send({
@@ -50,4 +53,4 @@ const submitReview = async (req, res) => {
     });
   }
 };
-module.exports = { submitReview, getAllReviews  }
+module.exports = { submitReview, getAllReviews }
