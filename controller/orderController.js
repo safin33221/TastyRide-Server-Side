@@ -28,8 +28,9 @@ const placeOrder = async (req, res) => {
       restaurantEmail,
       paymentMethod,
       total_amount,
-      status: status || 'Pending',
+      status: status || "Pending",
       createdAt: createdAt || Date.now(),
+      acceptedBy: "",
     });
 
     const savedOrder = await order.save();
