@@ -6,7 +6,8 @@ const reviewSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   userPhoto: { type: String },
   restaurantEmail: { type: String },
-  orderId: { type: String }
+  orderId: { type: String },
+  userName: { type: String }
 });
 
 module.exports = mongoose.model('Review', reviewSchema);
